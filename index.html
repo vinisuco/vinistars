@@ -381,6 +381,11 @@
             transform: translateY(calc(-15vh - 25px)) scale(0.68); 
         }
 
+        /* AJUSTE FUTEBOL: sobe mais e reduz escala para caber slots 3 e 6 */
+        .board.game-active.futebol-active {
+            transform: translateY(-18vh) scale(0.78);
+        }
+
         .pair-container { position: absolute; top: 50%; left: 50%; display: flex; transform-origin: center center; pointer-events: none; }
         .pair-vertical { flex-direction: column; gap: var(--pair-gap); transform: translate(-50%, -50%) rotate(var(--a)) translateY(calc(-1 * var(--pair-radius))); }
         .tight-pair { flex-direction: column; gap: var(--tight-gap); transform: translate(-50%, -50%) rotate(var(--a)) translateY(calc(-1 * var(--pair-radius))); }
@@ -424,18 +429,31 @@
         #scrContainer .card, #csmdContainer .card, #duplaContainer .card, #oposicaoContainer .card { --card-w: calc(14 * var(--u)); --card-h: calc(24.3 * var(--u)); font-size: calc(2.4 * var(--u)); }
         #oposicaoScrContainer .card { --card-w: calc(11 * var(--u)); --card-h: calc(19 * var(--u)); font-size: calc(2.2 * var(--u)); }
         #taContainer .card, #daviContainer .card { --card-w: calc(11 * var(--u)); --card-h: calc(19 * var(--u)); font-size: calc(2.2 * var(--u)); }
+        #futebolContainer { --card-w: calc(9.3 * var(--u)); --card-h: calc(16.1 * var(--u)); }
+        #futebolContainer .card { font-size: calc(1.85 * var(--u)); }
+        #futebolContainer .linear-col { width: calc(2 * var(--card-w) + 1.5 * var(--u)); }
+        #futebolContainer .slot-label { font-size: 10px; letter-spacing: 1px; line-height: 1.25; margin-bottom: 8px; }
+        #futebolContainer .slot-label .slot-sublabel { font-size: 8px; margin-top: 3px; }
 
         .board.game-active.ta-active #taContainer .card, .board.game-active.davi-active #daviContainer .card, .board.game-active.oposicao-scr-active #oposicaoScrContainer .card { --card-w: calc(8.5 * var(--u)); --card-h: calc(14.7 * var(--u)); font-size: calc(1.7 * var(--u)); }
+        .board.game-active.futebol-active #futebolContainer { --card-w: calc(7.6 * var(--u)); --card-h: calc(13.1 * var(--u)); }
+        .board.game-active.futebol-active #futebolContainer .card { font-size: calc(1.5 * var(--u)); }
+        .board.futebol-active ~ #gamePanel .game-grid .back-card { width: 42px !important; height: 73px !important; }
         .dupla-active .back-card, #duplaContainer .back-card { width: calc(14 * var(--u)); height: calc(24.3 * var(--u)); }
 
         .linear-row { display: flex; gap: calc(6 * var(--u)); }
         .linear-col { display: flex; flex-direction: column; align-items: center; }
         .slot-label { font-family: 'Cinzel', serif; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold-light); margin-bottom: 12px; font-weight: 600; text-align: center; text-shadow: none; opacity: 0.95; }
+        .slot-label .slot-sublabel { display: block; font-size: 9px; letter-spacing: 1px; opacity: 0.7; margin-top: 4px; font-family: 'Montserrat', sans-serif; font-weight: 500; text-transform: uppercase; }
         .linear-card { transform: none !important; }
         .minor-card-gap { margin-top: calc(1.5 * var(--u)); }
         .temple-grid { display: flex; flex-direction: row; gap: calc(8 * var(--u)); align-items: center; justify-content: center; }
         .temple-col { display: flex; flex-direction: column; gap: calc(4 * var(--u)); }
         .temple-row-pair { display: flex; gap: calc(1.5 * var(--u)); }
+
+        /* FUTEBOL: gap reduzido para caber slots 3 e 6 na tela */
+        .futebol-grid { display: flex; flex-direction: row; gap: calc(2 * var(--u)); align-items: center; justify-content: center; }
+        .futebol-col { display: flex; flex-direction: column; gap: calc(1.5 * var(--u)); align-items: center; }
 
         .central-pair, .side-pair-horizontal, .pair-container, .linear-container, .home-container { display: none !important; }
         .board.home-active .home-container { display: flex !important; }
@@ -447,10 +465,12 @@
         .board.davi-active #daviContainer { display: flex !important; }
         .board.oposicao-active #oposicaoContainer { display: flex !important; }
         .board.oposicao-scr-active #oposicaoScrContainer { display: flex !important; }
+        .board.futebol-active #futebolContainer { display: flex !important; }
 
         .game-panel { display: none; position: fixed; bottom: 0; right: 0; left: 0; transform: none; width: 100vw; max-width: 100vw; height: auto; max-height: 30vh; background-color: rgba(0, 0, 0, 0.98); border-top: 1px solid #333333; border-radius: 0; box-sizing: border-box; padding: 15px 10px; flex-direction: column; align-items: center; z-index: 2000; box-shadow: none; }
         .game-status { color: var(--gold-main); font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px; text-align: center; text-transform: uppercase; text-shadow: none; flex-shrink: 0; }
         .game-grid { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: row; flex-wrap: wrap; overflow-x: hidden; overflow-y: auto; gap: 6px; justify-content: center; padding: 10px 20px; box-sizing: border-box; scroll-behavior: smooth; position: relative; }
+        .scroll-hint-bar { position: absolute; top: 48px; bottom: 14px; right: 5px; width: 3px; border-radius: 3px; background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 18%, rgba(255,255,255,0.4) 82%, rgba(255,255,255,0) 100%); pointer-events: none; z-index: 2001; }
 
         .back-card { width: calc(7.5 * var(--u)); height: calc(13 * var(--u)); background-image: var(--card-back-img); background-color: transparent; background-size: 100% 100%; background-position: center; background-repeat: no-repeat; border: 1px solid rgba(255, 255, 255, 0.4); cursor: pointer; transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s, box-shadow 0.3s; flex-shrink: 0; box-shadow: none; border-radius: 6px; box-sizing: border-box; }
         .game-grid .back-card { width: 32px !important; height: 56px !important; border-radius: 4px; box-shadow: none; border-width: 1px !important; }
@@ -466,7 +486,7 @@
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); z-index: 9999; justify-content: center; align-items: center; animation: fadeIn 0.3s ease; backdrop-filter: blur(8px); }
         .modal-content { background-color: #000000; width: 85%; max-width: 850px; height: 75vh; border: var(--border-thin); display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; box-shadow: none; border-radius: 0; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333333; padding-bottom: 15px; margin-bottom: 20px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333333; padding-bottom: 15px; margin-bottom: 20px; flex-shrink: 0; }
         .modal-header h2 { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; color: var(--gold-main); margin: 0; }
         .close-btn { background: none; border: none; color: var(--text-muted); font-size: 28px; cursor: pointer; transition: color 0.3s; }
         .close-btn:hover { color: var(--gold-light); }
@@ -478,7 +498,7 @@
         .gallery-card { width: 110px; aspect-ratio: 7.5 / 13; background-size: 100% 100%; border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer; transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s; border-radius: 6px; box-shadow: none; flex-shrink: 0; }
         .gallery-card:hover { transform: scale(1.06) translateY(-4px); border-color: var(--gold-main); box-shadow: none; }
 
-        .verb-box { border: 1px solid #333333; padding: 15px; margin-top: 22px; background-color: transparent; text-align: center; border-radius: 0; overflow: hidden; }
+        .verb-box { border: 1px solid #333333; padding: 15px; margin-top: 22px; background-color: transparent; text-align: center; border-radius: 0; overflow: visible; flex-shrink: 0; }
         .verb-box-title { font-family: 'Cinzel', serif; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px; color: var(--gold-main); display: block; margin-bottom: 12px; }
         .verb-list { font-family: 'Montserrat', sans-serif; font-size: 13px; letter-spacing: 1px; color: var(--text-main); line-height: 1.5; }
 
@@ -502,6 +522,7 @@
         ::-webkit-scrollbar-thumb:hover { background: #FFFFFF; }
 
         .board:not(.home-active):not(.game-active) { transform: translateY(-12vh); }
+        .board.futebol-active:not(.home-active):not(.game-active) { transform: translateY(-11vh); }
     </style>
 </head>
 <body>
@@ -545,6 +566,9 @@
                             <option value="csmd">Energia do Dia</option>
                             <option value="ta">Templo de Afrodite</option>
                             <option value="davi">Estrela de Davi</option>
+                        </optgroup>
+                        <optgroup label="Futebol">
+                            <option value="futebol">Futebol</option>
                         </optgroup>
                     </select>
                     <button class="action-btn primary-cta btn-go" onclick="startSelectedGame()">Continuar</button>
@@ -840,12 +864,73 @@
             </div>
         </div>
 
+        <div id="futebolContainer" class="linear-container">
+            <div class="futebol-grid">
+                <div class="futebol-col">
+                    <div class="linear-col">
+                        <span class="slot-label">1: Força do Time</span>
+                        <div class="temple-row-pair">
+                            <div class="card linear-card" data-futebol-slot="1" onclick="selectCard(this)">1 Maior</div>
+                            <div class="card linear-card" data-futebol-slot="8" onclick="selectCard(this)">8 Menor</div>
+                        </div>
+                    </div>
+                    <div class="linear-col">
+                        <span class="slot-label">2: Ataque do Time</span>
+                        <div class="temple-row-pair">
+                            <div class="card linear-card" data-futebol-slot="2" onclick="selectCard(this)">2 Maior</div>
+                            <div class="card linear-card" data-futebol-slot="9" onclick="selectCard(this)">9 Menor</div>
+                        </div>
+                    </div>
+                    <div class="linear-col">
+                        <span class="slot-label">3: Defesa do Time</span>
+                        <div class="temple-row-pair">
+                            <div class="card linear-card" data-futebol-slot="3" onclick="selectCard(this)">3 Maior</div>
+                            <div class="card linear-card" data-futebol-slot="10" onclick="selectCard(this)">10 Menor</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="futebol-col">
+                    <div class="linear-col">
+                        <span class="slot-label">7: Resultado</span>
+                        <div class="temple-row-pair">
+                            <div class="card linear-card" data-futebol-slot="7" onclick="selectCard(this)">7 Maior</div>
+                            <div class="card linear-card" data-futebol-slot="14" onclick="selectCard(this)">14 Menor</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="futebol-col">
+                    <div class="linear-col">
+                        <span class="slot-label">4: Fluxo na Partida</span>
+                        <div class="temple-row-pair">
+                            <div class="card linear-card" data-futebol-slot="4" onclick="selectCard(this)">4 Maior</div>
+                            <div class="card linear-card" data-futebol-slot="11" onclick="selectCard(this)">11 Menor</div>
+                        </div>
+                    </div>
+                    <div class="linear-col">
+                        <span class="slot-label">5: Sorte do Time</span>
+                        <div class="temple-row-pair">
+                            <div class="card linear-card" data-futebol-slot="5" onclick="selectCard(this)">5 Maior</div>
+                            <div class="card linear-card" data-futebol-slot="12" onclick="selectCard(this)">12 Menor</div>
+                        </div>
+                    </div>
+                    <div class="linear-col">
+                        <span class="slot-label">6: Está Próximo a Vencer?</span>
+                        <div class="temple-row-pair">
+                            <div class="card linear-card" data-futebol-slot="6" onclick="selectCard(this)">6 Maior</div>
+                            <div class="card linear-card" data-futebol-slot="13" onclick="selectCard(this)">13 Menor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div id="gamePanel" class="game-panel">
         <button id="btnGlobalRandom" class="action-btn" onclick="triggerGlobalRandom()">GERAR JOGO ALEATÓRIO</button>
         <div id="gameStatus" class="game-status">Selecione uma carta</div>
         <div id="gameGrid" class="game-grid"></div>
+        <div class="scroll-hint-bar" aria-hidden="true"></div>
     </div>
 
     <div id="tarotModal" class="modal">
@@ -858,7 +943,7 @@
                 <button class="tab-btn active" onclick="filterDeck('major')">Arcanos Maiores</button>
                 <button class="tab-btn" onclick="filterDeck('minor')">Arcanos Menores (56 cartas)</button>
             </div>
-            <div style="flex:1; overflow-y:auto; overflow-x:hidden; min-height: 0;">
+            <div style="flex:1; overflow-y:auto; overflow-x:hidden; min-height: 0; -webkit-overflow-scrolling: touch;">
                 <div id="cardsGrid" class="cards-grid"></div>
             </div>
         </div>
@@ -880,19 +965,19 @@
                 <button class="tab-btn suit-tab" onclick="filterEncyclopediaMinor('cups', this)">Copas</button>
                 <button class="tab-btn suit-tab" onclick="filterEncyclopediaMinor('wands', this)">Paus</button>
             </div>
-            <div style="flex:1; overflow-y:auto; overflow-x:hidden; min-height: 0;">
+            <div style="flex:1; overflow-y:auto; overflow-x:hidden; min-height: 0; -webkit-overflow-scrolling: touch;">
                 <div id="encyclopediaGrid" class="cards-grid" style="flex-wrap: wrap;"></div>
             </div>
         </div>
     </div>
 
     <div id="detailModal" class="modal">
-        <div class="modal-content" style="max-width: 360px; height: auto; max-height: 90vh; overflow-y: auto;">
+        <div class="modal-content" style="max-width: 360px; height: auto; max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
             <div class="modal-header">
                 <h2 id="detailCardName" style="font-size: 16px;">Arcano</h2>
                 <button class="close-btn" onclick="closeDetailModal()">&times;</button>
             </div>
-            <img id="detailCardImg" class="gallery-card" style="width: 150px; height: 260px; margin: 0 auto; display: block; border: var(--border-thin); position: relative; border-radius: 6px; box-shadow: none; object-fit: fill;" alt="Arcano">
+            <img id="detailCardImg" class="gallery-card" style="width: 150px; height: 260px; margin: 0 auto; display: block; border: var(--border-thin); position: relative; border-radius: 6px; box-shadow: none; object-fit: fill; flex-shrink: 0;" alt="Arcano">
             
             <div class="verb-box">
                 <span class="verb-box-title">Fluxo de Palavra</span>
@@ -935,7 +1020,7 @@
         const btnVoltar = document.getElementById('btnVoltar');
         const postGameControls = document.getElementById('postGameControls'); 
 
-        const baseUrl = 'https://marycusack.com/Decks/Images/Tarot/R/Radiant/';
+        const baseUrl = 'https://marycusack.com/Decks/Images/Tarot/G/GoldenThread/';
         
         const majorNames = [
             "0 - O Louco", "1 - O Mago", "2 - A Sacerdotisa", "3 - A Imperatriz", 
@@ -1466,10 +1551,10 @@
                 card.innerHTML = '';
                 
                 if (card.classList.contains('linear-card')) {
-                    let id = card.getAttribute('data-scr-slot') || card.getAttribute('data-csmd-slot') || card.getAttribute('data-ta-slot') || card.getAttribute('data-dupla-slot') || card.getAttribute('data-davi-slot') || card.getAttribute('data-opo-slot') || card.getAttribute('data-oposcr-slot');
+                    let id = card.getAttribute('data-scr-slot') || card.getAttribute('data-csmd-slot') || card.getAttribute('data-ta-slot') || card.getAttribute('data-dupla-slot') || card.getAttribute('data-davi-slot') || card.getAttribute('data-opo-slot') || card.getAttribute('data-oposcr-slot') || card.getAttribute('data-futebol-slot');
                     
                     if(id) {
-                        if (card.hasAttribute('data-davi-slot')) {
+                        if (card.hasAttribute('data-davi-slot') || card.hasAttribute('data-futebol-slot')) {
                             let num = parseInt(id);
                             card.textContent = num <= 7 ? num + " Maior" : num + " Menor";
                         } else if (card.hasAttribute('data-dupla-slot')) {
@@ -1559,6 +1644,7 @@
                 case 'csmd': initCsmdGame(); break;
                 case 'ta': initTaGame(); break;
                 case 'davi': initDaviGame(); break;
+                case 'futebol': initFutebolGame(); break;
             }
         }
 
@@ -1579,6 +1665,9 @@
             } else if (mode === 'davi') {
                 majors = [1,2,3,4,5,6,7].map(i => document.querySelector(`[data-davi-slot="${i}"]`));
                 minors = [8,9,10,11,12,13,14].map(i => document.querySelector(`[data-davi-slot="${i}"]`));
+            } else if (mode === 'futebol') {
+                majors = [1,2,3,4,5,6,7].map(i => document.querySelector(`[data-futebol-slot="${i}"]`));
+                minors = [8,9,10,11,12,13,14].map(i => document.querySelector(`[data-futebol-slot="${i}"]`));
             } else if (mode === 'oposicao') {
                 majors = [ document.querySelector('[data-opo-slot="m1"]'), document.querySelector('[data-opo-slot="m2"]') ];
                 minors = [ document.querySelector('[data-opo-slot="me1"]'), document.querySelector('[data-opo-slot="me2"]') ];
@@ -1658,6 +1747,12 @@
 
         function initDaviGame() {
             gameMode = 'davi'; mainBoard.className = 'board davi-active game-active';
+            resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none';
+            btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase();
+        }
+
+        function initFutebolGame() {
+            gameMode = 'futebol'; mainBoard.className = 'board futebol-active game-active';
             resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none';
             btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase();
         }
@@ -1812,6 +1907,7 @@
             else if (gameMode === 'csmd') initCsmdGame();
             else if (gameMode === 'ta') initTaGame();
             else if (gameMode === 'davi') initDaviGame();
+            else if (gameMode === 'futebol') initFutebolGame();
         }
 
         let meaningsVisible = true;
@@ -1836,6 +1932,9 @@
             if (cardElement.hasAttribute('data-davi-slot')) {
                 let daviId = parseInt(cardElement.getAttribute('data-davi-slot'));
                 if (daviId <= 7) filterDeck('major'); else filterDeck('minor');
+            } else if (cardElement.hasAttribute('data-futebol-slot')) {
+                let futId = parseInt(cardElement.getAttribute('data-futebol-slot'));
+                if (futId <= 7) filterDeck('major'); else filterDeck('minor');
             } else if (cardElement.hasAttribute('data-dupla-slot')) {
                 let duplaId = cardElement.getAttribute('data-dupla-slot');
                 if (duplaId === "1") filterDeck('major'); else filterDeck('minor');
@@ -1880,7 +1979,6 @@
             });
         }
 
-        /* --- ALTERNADOR DE ABAS DO DETALHE --- */
         function switchMeaningTab(tabName) {
             document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.meaning-content-area').forEach(a => a.classList.remove('active'));
@@ -1895,6 +1993,7 @@
                 document.getElementById('tabBtnEuropeu').classList.add('active');
                 document.getElementById('areaEuropeu').classList.add('active');
             }
+            detailModal.querySelector('.modal-content').scrollTop = 0;
         }
 
         function openDetailModalDirect(name, imgUrl) {
