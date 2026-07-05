@@ -107,20 +107,10 @@
         #mainBoard[data-current-deck="MoonBaby"] .gallery-card {
             filter: sepia(0.45) saturate(1.4) contrast(1.05) brightness(1.02) !important;
             border: 0px solid #FFFFFF !important;
-            border-radius: 12px !important;
+            border-radius: 3px !important;
         }
 
-        #mainBoard[data-current-deck="RiderWaite"] .card,
-        #mainBoard[data-current-deck="RiderWaite"] .back-card,
-        #mainBoard[data-current-deck="RiderWaite"] .gallery-card {
-            filter: sepia(0.2) saturate(0.7) contrast(0.85) brightness(1.05) hue-rotate(330deg) !important;
-        }
-
-        #mainBoard[data-current-deck="Radiant"] .card,
-        #mainBoard[data-current-deck="Radiant"] .back-card,
-        #mainBoard[data-current-deck="Radiant"] .gallery-card {
-            filter: sepia(0.2) saturate(0.7) contrast(0.85) brightness(1.05) hue-rotate(330deg) !important;
-        }
+       
 
         #mainBoard[data-current-deck="RiderWaite"] .card {
             border-width: 2px 0px 2px 0px !important;
@@ -321,7 +311,11 @@
         #duplaContainer .card { --card-w: calc(18.2 * var(--u)); --card-h: calc(31.6 * var(--u)); font-size: calc(2.6 * var(--u)); }
         .dupla-active .back-card, #duplaContainer .back-card { width: calc(18.2 * var(--u)) !important; height: calc(31.6 * var(--u)) !important; }
         #scrTempoContainer .card { --card-w: calc(14 * var(--u)); --card-h: calc(24.3 * var(--u)); font-size: calc(2.4 * var(--u)); }
-        #futebolContainer { --card-w: calc(7.44 * var(--u)); --card-h: calc(12.88 * var(--u)); }
+        #futebolContainer { 
+            --card-w: calc(2 * var(--u)); 
+            --card-h: calc(5 * var(--u)); 
+        }
+
         #futebolContainer .card { font-size: calc(1.85 * var(--u)); }
         #futebolContainer .linear-col { width: calc(2 * var(--card-w) + 1.5 * var(--u)); }
         #futebolContainer .slot-label { font-size: 10px; letter-spacing: 1px; line-height: 1.25; margin-bottom: 8px; }
@@ -368,27 +362,110 @@
 
         .central-pair, .side-pair-horizontal, .pair-container, .linear-container, .home-container { display: none !important; }
         .board.home-active .home-container { display: flex !important; }
-        .board.mandala-active .central-pair, .board.mandala-active .side-pair-horizontal, .board.mandala-active .pair-container { display: flex !important; }
-        .board.scr-active #scrContainer { display: flex !important; }
-        .board.csmd-active #csmdContainer { display: flex !important; }
-        .board.ta-active #taContainer { display: flex !important; }
-        .board.dupla-active #duplaContainer { display: flex !important; }
-        .board.davi-active #daviContainer { display: flex !important; }
-        .board.oposicao-active #oposicaoContainer { display: flex !important; }
-        .board.oposicao-scr-active #oposicaoScrContainer, 
-        .board.futebol-scr-active #oposicaoScrContainer { display: flex !important; }
-        .board.futebol-active #futebolContainer { display: flex !important; }
-        .board.scr-tempo-active #scrTempoContainer { display: flex !important; }
+        .board.mandala-active .central-pair, .board.mandala-active .side-pair-horizontal, .board.mandala-active .pair-container { display: flex !important; 
+margin-top: -70px;
+}
+        .board.scr-active #scrContainer { display: flex !important; 
+margin-top: -70px;
+}
+        .board.csmd-active #csmdContainer { 
+    display: flex !important; 
+    margin-top: -70px; 
+}
 
-        .board.mandala-active .central-pair,
-        .board.mandala-active .pair-container,
-        .board.mandala-active .side-pair-horizontal { top: 42%; }
-        #taContainer { top: 47%; }
-        #daviContainer { top: 46%; }
-        #scrContainer { top: 45%; }
-        #oposicaoContainer { top: 45%; }
-        #oposicaoScrContainer { top: 45%; }
-        .board.mandala-active .card { border-radius: 2px; }
+        .board.ta-active #taContainer { display: flex !important; 
+margin-top: -70px;
+}
+        .board.davi-active #daviContainer { display: flex !important; 
+margin-top: -70px;
+}
+        .board.oposicao-active #oposicaoContainer { display: flex !important; 
+margin-top: -70px;
+}
+/* --- Ajuste para subir o Jogo da Dupla --- */
+.board.dupla-active #duplaContainer { 
+    display: flex !important; 
+    margin-top: -70px; /* Ajuste este valor conforme necessário */
+}
+
+
+        .board.oposicao-scr-active #oposicaoScrContainer, 
+        .board.futebol-scr-active #oposicaoScrContainer { display: flex !important; 
+margin-top: -70px;
+}
+        .board.futebol-active #futebolContainer { display: flex !important; 
+margin-top: -70px;
+}
+        .board.scr-tempo-active #scrTempoContainer { display: flex !important; 
+margin-top: -70px;
+}
+        
+        /* NOVO: JOGO DOS AMANTES - CENTRALIZADO E AJUSTADO */
+.board.amantes-active #amantesContainer { 
+    display: flex !important; 
+    justify-content: center; 
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    /* Ajuste o valor abaixo: quanto menor (ou mais negativo), mais pra cima ele sobe */
+    padding-top: 0px; 
+    margin-top: -70px; 
+}
+
+
+#amantesContainer .amantes-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: calc(1.5 * var(--u)); /* Reduzido para ficar compacto */
+    max-width: 90vw;
+    justify-items: center;
+}
+
+/* Reduz o tamanho das cartas no tabuleiro */
+#amantesContainer .card { 
+    --card-w: calc(4.5 * var(--u)); /* Reduzi de 5.5 para 4.5 */
+    --card-h: calc(7.8 * var(--u)); /* Reduzi de 9.5 para 7.8 */
+    font-size: calc(0.9 * var(--u)); 
+}
+
+#amantesContainer .slot-label {
+    font-size: calc(1 * var(--u)) !important;
+    margin-bottom: calc(0.5 * var(--u));
+    letter-spacing: 1px;
+}
+
+/* Ajusta o par de cartas dentro da casa */
+#amantesContainer .temple-row-pair {
+    gap: calc(0.5 * var(--u));
+}
+
+
+/* Posicionamento exato na grade de 4 linhas x 3 colunas */
+#amantesContainer .linear-col:nth-child(1)  { grid-row: 1; grid-column: 2; } /* Casa 1 - Topo Centro */
+#amantesContainer .linear-col:nth-child(2)  { grid-row: 2; grid-column: 3; } /* Casa 2 - Meio Direita */
+#amantesContainer .linear-col:nth-child(3)  { grid-row: 2; grid-column: 2; } /* Casa 3 - Meio Centro */
+#amantesContainer .linear-col:nth-child(4)  { grid-row: 2; grid-column: 1; } /* Casa 4 - Meio Esquerda */
+#amantesContainer .linear-col:nth-child(5)  { grid-row: 3; grid-column: 3; } /* Casa 5 - Baixo Direita */
+#amantesContainer .linear-col:nth-child(6)  { grid-row: 3; grid-column: 2; } /* Casa 6 - Baixo Centro */
+#amantesContainer .linear-col:nth-child(7)  { grid-row: 3; grid-column: 1; } /* Casa 7 - Baixo Esquerda */
+#amantesContainer .linear-col:nth-child(8)  { grid-row: 4; grid-column: 3; } /* Casa 8 - Fundo Direita */
+#amantesContainer .linear-col:nth-child(9)  { grid-row: 4; grid-column: 2; } /* Casa 9 - Fundo Centro */
+#amantesContainer .linear-col:nth-child(10) { grid-row: 4; grid-column: 1; } /* Casa 10 - Fundo Esquerda */
+
+
+/* --- POSIÇÕES DAS CARTAS --- */
+/* Altere os valores de top e left para posicionar onde quiser */
+#amantesContainer .linear-col:nth-child(1)  { top: 80%; left: 10%; } /* Casa 1 */
+#amantesContainer .linear-col:nth-child(2)  { top: 50%; left: 15%; } /* Casa 2 */
+#amantesContainer .linear-col:nth-child(3)  { top: 20%; left: 25%; } /* Casa 3 */
+#amantesContainer .linear-col:nth-child(4)  { top: 10%; left: 50%; } /* Casa 4 */
+#amantesContainer .linear-col:nth-child(5)  { top: 20%; left: 75%; } /* Casa 5 */
+#amantesContainer .linear-col:nth-child(6)  { top: 50%; left: 85%; } /* Casa 6 */
+#amantesContainer .linear-col:nth-child(7)  { top: 80%; left: 90%; } /* Casa 7 */
+#amantesContainer .linear-col:nth-child(8)  { top: 95%; left: 70%; } /* Casa 8 */
+#amantesContainer .linear-col:nth-child(9)  { top: 100%; left: 50%;} /* Casa 9 */
+#amantesContainer .linear-col:nth-child(10) { top: 95%; left: 30%; } /* Casa 10 */
+
 
         /* --- PAINEL DE JOGO --- */
         .game-panel { display: none; position: fixed; bottom: 0; right: 0; left: 0; width: 100vw; max-width: 100vw; height: auto; max-height: 30vh; background-color: rgba(0,0,0,0.98); border-top: 1px solid #333333; border-radius: 0; box-sizing: border-box; padding: 15px 10px; flex-direction: column; align-items: center; z-index: 2000; }
@@ -440,6 +517,35 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #555555; }
         ::-webkit-scrollbar-thumb:hover { background: #888888; }
+
+        /* 1. Reduz o tamanho e a redondeza das cartas no jogo Futebol SCR */
+        .board.futebol-scr-active #oposicaoScrContainer .card {
+            --card-w: calc(4 * var(--u));    
+            --card-h: calc(6.9 * var(--u));  
+            font-size: calc(0.7 * var(--u)); 
+            border-radius: 3px !important; 
+        }
+
+
+/* Cartas da Oposição SCR e Futebol SCR com o mesmo tamanho e no mesmo lugar da tela */
+.board.futebol-scr-active #oposicaoScrContainer .card,
+.board.oposicao-scr-active #oposicaoScrContainer .card {
+    --card-w: calc(4 * var(--u));    
+    --card-h: calc(6.9 * var(--u));  
+    font-size: calc(0.7 * var(--u)); 
+    border-radius: 3px !important; 
+}
+
+/* Limpeza de margens manuais anteriores para não conflitar com a global */
+#duplaContainer, #csmdContainer, #daviContainer, #amantesContainer, .pair-container {
+    margin-top: 0 !important;
+}
+
+
+
+
+
+
     </style>
 </head>
 <body>
@@ -456,6 +562,22 @@
             <button id="btnPlayAnother" class="action-btn" onclick="playAnotherGame()">Limpar Jogo</button>
             <button id="btnToggleMeanings" class="action-btn" onclick="toggleMeanings()">Ocultar Significados</button>
         </div>
+        
+        <div class="post-game-row" id="themeContainer" style="display: none; width: 100%;">
+            <select id="themeSelect" class="action-btn" style="appearance: none; -webkit-appearance: none; text-align: center; font-size: 8px; letter-spacing: 1px;" onchange="updateMeanings()">
+                <option value="">PADRÃO: SIGNIFICADOS GERAIS</option>
+                <optgroup label="AFRODITE">
+                    <option value="MENTAL">MENTAL</option>
+                    <option value="SENTIMENTAL">SENTIMENTAL</option>
+                    <option value="MATERIAL">MATERIAL</option>
+                    <option value="FUTURO">FUTURO</option>
+                </optgroup>
+                <optgroup label="FINANCEIRO">
+                    <option value="FINANCEIRO">ARCANOS NO FINANCEIRO</option>
+                </optgroup>
+            </select>
+        </div>
+
         <button id="btnUpdateMeanings" class="action-btn primary-cta" onclick="updateMeanings()">Atualizar Significados</button>
     </div>
 
@@ -473,7 +595,7 @@
                     <select id="deckSelect" class="meta-select" onchange="applyDeckSelection()">
                         <option value="Alchemical">Alchemical Tarot</option>
                         <option value="GoldArt">Golden Art Nouveau</option>
-                        <option value="Radiant">Radiant Waite</option>
+                        <option value="Radiant" selected>Radiant Waite</option>
                         <option value="Before">Before Tarot</option>
                         <option value="AfterTarot">After Tarot</option>
                         <option value="NewVision">New Vision Tarot</option>
@@ -483,7 +605,7 @@
                         <option value="OldStyle">Old Style Tarot</option>
                         <option value="Oppositions">Tarot of Oppositions</option>
                         <option value="RiderWaite">Rider Waite Clássico</option>
-                        <option value="MoonBaby" selected>Moon Baby Tarot (padrão)</option>
+                        <option value="MoonBaby">Moon Baby Tarot (padrão)</option>
                     </select>
                 </div>
                 <div class="meta-selector-row">
@@ -516,6 +638,7 @@
                             <option value="scrTempo">SCR com Before e After Tarot</option>
                             <option value="csmd">Energia do Dia</option>
                             <option value="ta">Templo de Afrodite</option>
+                            <option value="amantes">Jogo dos Amantes</option>
                             <option value="davi">Estrela de Davi</option>
                         </optgroup>
                         <optgroup label="Futebol">
@@ -763,6 +886,92 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="amantesContainer" class="linear-container">
+            <div class="amantes-grid">
+                
+                <div class="linear-col">
+                    <span class="slot-label" style="font-size: calc(1.3 * var(--u));">Casa 1</span>
+                    <div class="temple-row-pair">
+                        <div class="card linear-card" data-amantes-slot="m1" onclick="selectCard(this)">1 Maior</div>
+                        <div class="card linear-card" data-amantes-slot="me1" onclick="selectCard(this)">1 Menor</div>
+                    </div>
+                </div>
+
+                <div class="linear-col">
+                    <span class="slot-label" style="font-size: calc(1.3 * var(--u));">Casa 2</span>
+                    <div class="temple-row-pair">
+                        <div class="card linear-card" data-amantes-slot="m2" onclick="selectCard(this)">2 Maior</div>
+                        <div class="card linear-card" data-amantes-slot="me2" onclick="selectCard(this)">2 Menor</div>
+                    </div>
+                </div>
+
+                <div class="linear-col">
+                    <span class="slot-label" style="font-size: calc(1.3 * var(--u));">Casa 3</span>
+                    <div class="temple-row-pair">
+                        <div class="card linear-card" data-amantes-slot="m3" onclick="selectCard(this)">3 Maior</div>
+                        <div class="card linear-card" data-amantes-slot="me3" onclick="selectCard(this)">3 Menor</div>
+                    </div>
+                </div>
+
+                <div class="linear-col">
+                    <span class="slot-label" style="font-size: calc(1.3 * var(--u));">Casa 4</span>
+                    <div class="temple-row-pair">
+                        <div class="card linear-card" data-amantes-slot="m4" onclick="selectCard(this)">4 Maior</div>
+                        <div class="card linear-card" data-amantes-slot="me4" onclick="selectCard(this)">4 Menor</div>
+                    </div>
+                </div>
+
+                <div class="linear-col">
+                    <span class="slot-label" style="font-size: calc(1.3 * var(--u));">Casa 5</span>
+                    <div class="temple-row-pair">
+                        <div class="card linear-card" data-amantes-slot="m5" onclick="selectCard(this)">5 Maior</div>
+                        <div class="card linear-card" data-amantes-slot="me5" onclick="selectCard(this)">5 Menor</div>
+                    </div>
+                </div>
+
+                <div class="linear-col">
+                    <span class="slot-label" style="font-size: calc(1.3 * var(--u));">Casa 6</span>
+                    <div class="temple-row-pair">
+                        <div class="card linear-card" data-amantes-slot="m6" onclick="selectCard(this)">6 Maior</div>
+                        <div class="card linear-card" data-amantes-slot="me6" onclick="selectCard(this)">6 Menor</div>
+                    </div>
+                </div>
+
+                <div class="linear-col">
+                    <span class="slot-label" style="font-size: calc(1.3 * var(--u));">Casa 7</span>
+                    <div class="temple-row-pair">
+                        <div class="card linear-card" data-amantes-slot="m7" onclick="selectCard(this)">7 Maior</div>
+                        <div class="card linear-card" data-amantes-slot="me7" onclick="selectCard(this)">7 Menor</div>
+                    </div>
+                </div>
+
+                <div class="linear-col">
+                    <span class="slot-label" style="font-size: calc(1.3 * var(--u));">Casa 8</span>
+                    <div class="temple-row-pair">
+                        <div class="card linear-card" data-amantes-slot="m8" onclick="selectCard(this)">8 Maior</div>
+                        <div class="card linear-card" data-amantes-slot="me8" onclick="selectCard(this)">8 Menor</div>
+                    </div>
+                </div>
+
+                <div class="linear-col">
+                    <span class="slot-label" style="font-size: calc(1.3 * var(--u));">Casa 9</span>
+                    <div class="temple-row-pair">
+                        <div class="card linear-card" data-amantes-slot="m9" onclick="selectCard(this)">9 Maior</div>
+                        <div class="card linear-card" data-amantes-slot="me9" onclick="selectCard(this)">9 Menor</div>
+                    </div>
+                </div>
+
+                <div class="linear-col">
+                    <span class="slot-label" style="font-size: calc(1.3 * var(--u));">Casa 10</span>
+                    <div class="temple-row-pair">
+                        <div class="card linear-card" data-amantes-slot="m10" onclick="selectCard(this)">10 Maior</div>
+                        <div class="card linear-card" data-amantes-slot="me10" onclick="selectCard(this)">10 Menor</div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -1049,7 +1258,7 @@
     const decksWithSpecialMajorNaming = ['Before', 'AfterTarot', 'Fyodor'];
     const specialMajorFileNames = ["Fool","Magician","Priestess","Empress","Emperor","Hierophant","Lovers","Chariot","Strength","Hermit","Wheel","Justice","Hanged","Death","Temperance","Devil","Tower","Star","Moon","Sun","Judgement","World"];
     const deckPentaclesPrefixOverrides = { Fyodor: 'Co' };
-    let currentDeckKey = 'MoonBaby';
+    let currentDeckKey = 'Radiant';
 
     const moonBabyMajors = ["https://i.ibb.co/LDpLtSpD/IMG-4190.png","https://i.ibb.co/mrXj7pGm/IMG-4191.png","https://i.ibb.co/b5d703rp/IMG-4192.png","https://i.ibb.co/n40BJ1x/IMG-4193.png","https://i.ibb.co/NnfSJ4Lq/IMG-4194.png","https://i.ibb.co/xqqGZM0s/IMG-4195.png","https://i.ibb.co/Q7hj1T7W/IMG-4196.png","https://i.ibb.co/mVNC1NSJ/IMG-4197.png","https://i.ibb.co/20c5Vwrd/IMG-4312.png","https://i.ibb.co/VpwJfDt1/IMG-4313.png","https://i.ibb.co/cSR7kRGC/IMG-4314.png","https://i.ibb.co/pj2w2Rwk/IMG-4315.png","https://i.ibb.co/5WQWTvSt/IMG-4202.png","https://i.ibb.co/cSkJ7YR3/IMG-4203.png","https://i.ibb.co/Xrpd6k2Y/IMG-4204.png","https://i.ibb.co/bgPr7G2H/IMG-4205.png","https://i.ibb.co/RR3LyDx/IMG-4206.png","https://i.ibb.co/z0M2cTr/IMG-4207.png","https://i.ibb.co/bRKPjCL9/IMG-4208.png","https://i.ibb.co/93Nwyj3p/IMG-4209.png","https://i.ibb.co/B27pJPQT/IMG-4318.png","https://i.ibb.co/8n5w4hLM/IMG-4319.png"];
     const moonBabyPentacles = ["https://i.ibb.co/wZ37xFKL/IMG-4244.png","https://i.ibb.co/vxVZmP4n/IMG-4245.png","https://i.ibb.co/wh3B8Hmv/IMG-4246.png","https://i.ibb.co/PvT12XVQ/IMG-4247.png","https://i.ibb.co/4nsc6Mfx/IMG-4248.png","https://i.ibb.co/DHVmk422/IMG-4249.png","https://i.ibb.co/GfkBkY3q/IMG-4250.png","https://i.ibb.co/chn25CJC/IMG-4251.png","https://i.ibb.co/RT1nz4LC/IMG-4258.png","https://i.ibb.co/DPkBQKyg/IMG-4259.png","https://i.ibb.co/nMq5LCG2/IMG-4260.png","https://i.ibb.co/GQDvk7rf/IMG-4261.png","https://i.ibb.co/CFqrkLQ/IMG-4262.png","https://i.ibb.co/ks5Q7dSC/IMG-4263.png"];
@@ -1109,9 +1318,6 @@
         deck.wands     = buildMinorsForDeck(currentDeckKey, 'W', 'Paus');
     }
 
-    // =====================================================================
-    // SISTEMA INTELIGENTE DE LEITURA (TEMPLO DE AFRODITE + NORMAL)
-    // =====================================================================
     let externalMeanings = null;
     let externalTaMeanings = null;
 
@@ -1176,7 +1382,7 @@
             
             if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
                 let themeStr = trimmed.slice(1, -1).toUpperCase();
-                if (['MENTAL', 'SENTIMENTAL', 'MATERIAL', 'FUTURO'].includes(themeStr)) {
+                if (['MENTAL', 'SENTIMENTAL', 'MATERIAL', 'FUTURO', 'FINANCEIRO'].includes(themeStr)) {
                     currentTheme = themeStr;
                     return;
                 }
@@ -1196,7 +1402,7 @@
                 currentCard = foundCard;
                 currentTheme = null; 
                 if (!externalTaMeanings[currentCard]) {
-                    externalTaMeanings[currentCard] = { MENTAL: [], SENTIMENTAL: [], MATERIAL: [], FUTURO: [] };
+                    externalTaMeanings[currentCard] = { MENTAL: [], SENTIMENTAL: [], MATERIAL: [], FUTURO: [], FINANCEIRO: [] };
                 }
                 
                 let afterName = trimmed.slice(foundCard.length).replace(/^[\s:–\-,]+/, '').trim();
@@ -1216,12 +1422,12 @@
         });
         
         const taCount = Object.keys(externalTaMeanings).filter(k => 
-            externalTaMeanings[k].MENTAL.length > 0 || externalTaMeanings[k].SENTIMENTAL.length > 0
+            externalTaMeanings[k].MENTAL.length > 0 || externalTaMeanings[k].SENTIMENTAL.length > 0 || externalTaMeanings[k].FINANCEIRO.length > 0
         ).length;
         const genCount = Object.keys(externalMeanings).length;
         
         if (taCount > 0) {
-            fileStatus.textContent = `✓ ${fname}: ${taCount} arcanos mapeados p/ Templo de Afrodite!`;
+            fileStatus.textContent = `✓ ${fname}: ${taCount} arcanos mapeados p/ Afrodite/Financeiro!`;
         } else if (genCount > 0) {
             fileStatus.textContent = `✓ ${fname}: ${genCount} arcanos lidos.`;
         } else {
@@ -1322,7 +1528,7 @@ const verbsMap = {
     "Rainha de Copas": ["acolhimento materno","empatia profunda","intuição guiada","suporte emocional","sensibilidade madura","amor compassivo","cura afetiva"],
     "Rei de Copas": ["controle emocional","maturidade afetiva","calma diplomática","conselho sábio","equilíbrio interno","acolhimento seguro","generosidade serena"],
     "Ás de Espadas": [ "Ideia fixa inicial", "Explosão de potência", "Capacidade de realização", "Lucidez mental cirúrgica", "Decisão rápida cortante", "Sentimentos intensos oscilantes", "Coragem e autoconfiança", "Esperteza intelectual articulada", "Fertilidade mental latente", "Clareza mental expansiva", "Certeza interna absoluta", "Potência sexual rígida", "Conflitos mentais paralisantes", "Acidentes e cortes", "Catalisador de impactos", "Amplificador de destruição", "Foco em meta" ],
-    "2 de Espadas": [ "Cabo de guerra", "Orgulho rígido defensivo", "Rivalidade em empate", "Oposição simétrica equivalente", "Cegueira deliberada extrema", "Recusa da realidade", "Rupturas por divergências", "Incapacidade de ceder", "Recusa ao diálogo", "Oportunidades perdidas", "Desejo de razão", "Bloqueio à reconciliação", "Foco no conflito", "Dor futura previsível", "Crises de ansiedade", "Obstáculo por vaidade", "Busca por validação" ],
+    "2 de Espadas": [ "Cabo de guerra", "Orgulho rígido defensivo", "ADVERSIDADES", "Oposição simétrica equivalente", "Cegueira deliberada extrema", "Recusa da realidade", "Rupturas por divergências", "Incapacidade de ceder", "Recusa ao diálogo", "Oportunidades perdidas", "Desejo de razão", "Bloqueio à reconciliação", "Foco no conflito", "Dor futura previsível", "Crises de ansiedade", "Obstáculo por vaidade", "Busca por validação" ],
     "3 de Espadas": [ "Profunda tristeza avassaladora", "Decepção por mentira", "Coração machucado consentido", "Negligência com realidade", "Sofrimento por negação", "Traição extremamente dolorosa", "Falsa promessa frustrante", "Abandono e solidão", "Erros de julgamento", "Confusão mental generalizada", "Ruptura definitiva radical", "Incompatibilidade de temperamentos", "Mágoas e ressentimentos", "Perdas por brigas", "Ferimento físico real", "Dores físicas intensas", "Teimosia no fracasso" ],
     "4 de Espadas": [ "Paralisia kármica indefinida", "Esgotamento mental completo", "Repouso hospitalar obrigatório", "Pausa para cura", "Reclusão e isolamento", "Solidão e abandonment", "Pausas involuntárias divinas", "Refúgio do caos", "Suporte médico especializado", "Adiamento longo desestimulante", "Estagnação prática total", "Recolhimento em guarda", "Esvaziamento mental completo", "Suspensão providencial necessária", "Reabastecimento de energias", "Imobilidade física temporária", "Travamento longo prazo" ],
     "5 de Espadas": [ "Humilhação extrema aceita", "Guerra inútil radical", "Erros repetidos obsessivos", "Desejo de vingança", "Atitudes indignas públicas", "Vitória amarga inglória", "Fuga de responsabilidades", "Armadilhas sociais manipuladas", "Vantagens por chantagem", "Conquistas fraudulentas falsas", "Incapacidade intelectual aparente", "Derrota moral autoinfligida", "Discussões violentas indignas", "Vitimismo choroso constante", "Ganância e guerra", "Ferimentos corporais graves", "Riscos à integridade" ],
@@ -1512,7 +1718,7 @@ const verbsMap = {
                        || card.getAttribute('data-ta-slot') || card.getAttribute('data-dupla-slot')
                        || card.getAttribute('data-davi-slot') || card.getAttribute('data-opo-slot')
                        || card.getAttribute('data-oposcr-slot') || card.getAttribute('data-futebol-slot')
-                       || card.getAttribute('data-scr-tempo-slot');
+                       || card.getAttribute('data-scr-tempo-slot') || card.getAttribute('data-amantes-slot');
                 if (id) {
                     if (card.hasAttribute('data-davi-slot') || card.hasAttribute('data-futebol-slot')) {
                         let num = parseInt(id);
@@ -1521,6 +1727,9 @@ const verbsMap = {
                         card.textContent = id === "1" ? "1 Maior" : "2 Menor";
                     } else if (card.hasAttribute('data-opo-slot') || card.hasAttribute('data-oposcr-slot')) {
                         card.textContent = id.includes('me') ? "Menor" : "Maior";
+                    } else if (card.hasAttribute('data-amantes-slot')) {
+                        let num = id.replace(/\D/g, '');
+                        card.textContent = id.includes('me') ? num + " Menor" : num + " Maior";
                     } else {
                         card.textContent = id.includes('-') ? id.split('-')[1] : id;
                     }
@@ -1538,23 +1747,34 @@ const verbsMap = {
         let cleanName = cardName.replace(/^\d+\s*[-–]\s*/, "").trim();
         let wordPool = ["Fluxo"];
         
-        if (gameMode === 'ta') {
+        // Puxa o tema selecionado no menu expansível para todos os jogos
+        let themeOverride = null;
+        const selectTheme = document.getElementById('themeSelect');
+        if (selectTheme && selectTheme.value) {
+            themeOverride = selectTheme.value;
+        }
+        
+        // 1. Prioriza o override selecionado pelo usuário no menu
+        if (themeOverride && externalTaMeanings && externalTaMeanings[cleanName] && externalTaMeanings[cleanName][themeOverride] && externalTaMeanings[cleanName][themeOverride].length > 0) {
+            wordPool = externalTaMeanings[cleanName][themeOverride];
+        } 
+        // 2. Fallback para as posições automáticas do Templo de Afrodite
+        else if (gameMode === 'ta' && slotElement.hasAttribute('data-ta-slot')) {
             let taSlot = slotElement.getAttribute('data-ta-slot');
-            if (taSlot) {
-                let slotNum = parseInt(taSlot);
-                let theme = 'MENTAL';
-                if ([1, 2, 7, 8].includes(slotNum)) theme = 'MENTAL';
-                else if ([3, 4, 9, 10].includes(slotNum)) theme = 'SENTIMENTAL';
-                else if ([5, 6, 11, 12].includes(slotNum)) theme = 'MATERIAL';
-                else if ([13, 14].includes(slotNum)) theme = 'FUTURO';
-                
-                if (externalTaMeanings && externalTaMeanings[cleanName] && externalTaMeanings[cleanName][theme] && externalTaMeanings[cleanName][theme].length > 0) {
-                    wordPool = externalTaMeanings[cleanName][theme];
-                } else if (verbsMap[cleanName]) {
-                    wordPool = verbsMap[cleanName];
-                }
+            let slotNum = parseInt(taSlot);
+            let theme = 'MENTAL';
+            if ([1, 2, 7, 8].includes(slotNum)) theme = 'MENTAL';
+            else if ([3, 4, 9, 10].includes(slotNum)) theme = 'SENTIMENTAL';
+            else if ([5, 6, 11, 12].includes(slotNum)) theme = 'MATERIAL';
+            else if ([13, 14].includes(slotNum)) theme = 'FUTURO';
+            
+            if (externalTaMeanings && externalTaMeanings[cleanName] && externalTaMeanings[cleanName][theme] && externalTaMeanings[cleanName][theme].length > 0) {
+                wordPool = externalTaMeanings[cleanName][theme];
+            } else if (verbsMap[cleanName]) {
+                wordPool = verbsMap[cleanName];
             }
         } 
+        // 3. Fallback para os jogos de Futebol
         else if (gameMode === 'futebol' || gameMode === 'futebolScr') {
             if (futebolVerbsMap[cleanName]) {
                 wordPool = futebolVerbsMap[cleanName];
@@ -1566,9 +1786,11 @@ const verbsMap = {
                 }
             }
         } 
+        // 4. Arquivos externos upados sem divisão de tags
         else if (externalMeanings && externalMeanings[cleanName] && externalMeanings[cleanName].verbos && externalMeanings[cleanName].verbos.length > 0) {
             wordPool = externalMeanings[cleanName].verbos;
         } 
+        // 5. Fallback geral
         else {
             if (verbsMap[cleanName]) {
                 wordPool = verbsMap[cleanName];
@@ -1699,6 +1921,9 @@ const verbsMap = {
         } else if (mode === 'oposicaoScr' || mode === 'futebolScr') {
             majors = ['t-m1','t-m2','t-m3','b-m1','b-m2','b-m3'].map(s => document.querySelector(`[data-oposcr-slot="${s}"]`));
             minors = ['t-me1','t-me2','t-me3','b-me1','b-me2','b-me3'].map(s => document.querySelector(`[data-oposcr-slot="${s}"]`));
+        } else if (mode === 'amantes') {
+            majors = [1,2,3,4,5,6,7,8,9,10].map(i => document.querySelector(`[data-amantes-slot="m${i}"]`));
+            minors = [1,2,3,4,5,6,7,8,9,10].map(i => document.querySelector(`[data-amantes-slot="me${i}"]`));
         } else if (mode === 'mandalaInterativa' || mode === 'mandalaManual') {
             majors.push(document.querySelector('[data-slot-num="0-left"]'));
             minors.push(document.querySelector('[data-slot-num="0-right"]'));
@@ -1762,6 +1987,7 @@ const verbsMap = {
             case 'davi':              initDaviGame(); break;
             case 'futebol':           initFutebolGame(); break;
             case 'futebolScr':        initFutebolScrGame(); break;
+            case 'amantes':           initAmantesGame(); break;
         }
         enableEmptySlotClicks();
         resizeBoardToFit();
@@ -1779,11 +2005,20 @@ const verbsMap = {
         gamePanel.style.display = 'none'; btnVoltar.style.display = 'none';
         postGameControls.style.display = 'none'; resetAllSlots();
         document.getElementById('gameSelect').value = "";
+        
+        // Reseta o menu de temas de forma universal
+        const themeContainer = document.getElementById('themeContainer');
+        if (themeContainer) themeContainer.style.display = 'none';
+        const themeSelect = document.getElementById('themeSelect');
+        if (themeSelect) themeSelect.value = "";
+
         mainBoard.style.transform = '';
     }
 
     function initInteractiveGame() { gameMode = 'mandalaInterativa'; mainBoard.className = 'board mandala-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
     function initDuplaGame() { gameMode = 'dupla'; mainBoard.className = 'board dupla-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
+
+
     function initScrGame() { gameMode = 'scr'; mainBoard.className = 'board scr-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
     function initScrTempoGame() {
         gameMode = 'scrTempo'; mainBoard.className = 'board scr-tempo-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex';
@@ -1806,7 +2041,8 @@ const verbsMap = {
     function initTaGame() { gameMode = 'ta'; mainBoard.className = 'board ta-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
     function initDaviGame() { gameMode = 'davi'; mainBoard.className = 'board davi-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
     function initFutebolGame() { gameMode = 'futebol'; mainBoard.className = 'board futebol-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
-    
+    function initAmantesGame() { gameMode = 'amantes'; mainBoard.className = 'board amantes-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
+
     function initOposicaoGame() {
         gameMode = 'oposicao'; mainBoard.className = 'board oposicao-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex';
         startSequence([
@@ -1930,6 +2166,13 @@ const verbsMap = {
         activePhase = 'complete';
         mainBoard.classList.remove('game-active');
         gamePanel.style.display = 'none';
+
+        // Mostra o seletor de temas para TODOS os jogos
+        const themeContainer = document.getElementById('themeContainer');
+        if (themeContainer) {
+            themeContainer.style.display = 'flex';
+        }
+
         document.querySelectorAll('.card[data-reveal-url]').forEach(card => {
             const finalUrl = card.getAttribute('data-reveal-url');
             const cardName = card.getAttribute('data-card-name');
@@ -1953,7 +2196,6 @@ const verbsMap = {
         else { document.body.classList.add('hide-meanings'); btn.textContent = 'Ligar Significados'; }
     }
 
-    // MODIFICAÇÃO CHAVE AQUI: selectCard repassa o próprio elemento (this) para a leitura
     function selectCard(cardElement) {
         const savedName  = cardElement.getAttribute('data-card-name');
         const hasImage   = cardElement.style.backgroundImage && cardElement.style.backgroundImage !== '';
@@ -1980,6 +2222,8 @@ const verbsMap = {
         } else if (cardElement.hasAttribute('data-opo-slot') || cardElement.hasAttribute('data-oposcr-slot')) {
             let id = cardElement.getAttribute('data-opo-slot') || cardElement.getAttribute('data-oposcr-slot');
             filterDeck(id.includes('me') ? 'minor' : 'major');
+        } else if (cardElement.hasAttribute('data-amantes-slot')) {
+            filterDeck(cardElement.getAttribute('data-amantes-slot').includes('me') ? 'minor' : 'major');
         } else if (cardElement.hasAttribute('data-scr-tempo-slot')) {
             filterDeck(cardElement.getAttribute('data-scr-tempo-slot').startsWith('top') ? 'major' : 'minor');
         } else if (cardElement.hasAttribute('data-scr-slot') || cardElement.hasAttribute('data-csmd-slot')) {
@@ -2066,7 +2310,6 @@ const verbsMap = {
         detailModal.querySelector('.modal-content').scrollTop = 0;
     }
 
-    // MODIFICAÇÃO CHAVE AQUI: Abertura do Modal de Detalhes suporta Templo de Afrodite
     function openDetailModalDirect(name, imgUrl, slotElement = null) {
         document.getElementById('detailCardName').textContent = name || "Arcano Selecionado";
         document.getElementById('detailCardImg').src = imgUrl;
@@ -2075,9 +2318,22 @@ const verbsMap = {
         let cleanName = name ? name.replace(/^\d+\s*[-–]\s*/, "").trim() : "";
         let verbs = ["Alinhamento","Fluxo","Sintonia"];
         let themeLabel = "Palavras-Chave Gerais";
-        let showExtended = true; // Mostra atributos longos ou oculta no TA?
+        let showExtended = true; 
         
-        if (gameMode === 'ta' && slotElement && slotElement.hasAttribute('data-ta-slot')) {
+        let themeOverride = null;
+        const selectTheme = document.getElementById('themeSelect');
+        if (selectTheme && selectTheme.value) {
+            themeOverride = selectTheme.value;
+        }
+
+        // 1. Verifica Override Geral (inclusive Financeiro)
+        if (themeOverride && externalTaMeanings && externalTaMeanings[cleanName] && externalTaMeanings[cleanName][themeOverride] && externalTaMeanings[cleanName][themeOverride].length > 0) {
+            themeLabel = `Tema Selecionado: ${themeOverride}`;
+            verbs = externalTaMeanings[cleanName][themeOverride];
+            showExtended = false;
+        } 
+        // 2. Fallback posições Templo de Afrodite
+        else if (gameMode === 'ta' && slotElement && slotElement.hasAttribute('data-ta-slot')) {
             let slotNum = parseInt(slotElement.getAttribute('data-ta-slot'));
             let theme = 'MENTAL';
             if ([1, 2, 7, 8].includes(slotNum)) theme = 'MENTAL';
@@ -2089,11 +2345,12 @@ const verbsMap = {
 
             if (externalTaMeanings && externalTaMeanings[cleanName] && externalTaMeanings[cleanName][theme] && externalTaMeanings[cleanName][theme].length > 0) {
                 verbs = externalTaMeanings[cleanName][theme];
-                showExtended = false; // Em modo Templo, listamos direto os significados sem misturar
+                showExtended = false; 
             } else if (verbsMap[cleanName]) {
                 verbs = verbsMap[cleanName];
             }
         } 
+        // 3. Fallback Futebol
         else if (gameMode === 'futebol' || gameMode === 'futebolScr') {
             if (futebolVerbsMap[cleanName]) verbs = futebolVerbsMap[cleanName];
             else {
@@ -2104,9 +2361,11 @@ const verbsMap = {
                 }
             }
         } 
+        // 4. Fallback Significado Base Externo
         else if (externalMeanings && externalMeanings[cleanName] && externalMeanings[cleanName].verbos && externalMeanings[cleanName].verbos.length > 0) {
             verbs = externalMeanings[cleanName].verbos;
         } 
+        // 5. Fallback Original
         else {
             if (verbsMap[cleanName]) verbs = verbsMap[cleanName];
             else {
@@ -2128,8 +2387,7 @@ const verbsMap = {
         const atributosExt = extSrc && extSrc.atributos;
         const situacao     = builtIn && builtIn.situacao;
 
-        // Limpa e estrutura a visualização da caixa de texto maior debaixo
-        if (gameMode === 'ta' && slotElement && slotElement.hasAttribute('data-ta-slot') && !showExtended) {
+        if ((gameMode === 'ta' && slotElement && slotElement.hasAttribute('data-ta-slot') && !showExtended) || (themeOverride && !showExtended)) {
              extendedContainer.innerHTML = `
                 <div style="line-height:1.7; color:var(--text-main);">
                     <strong style="color:var(--gold-main); font-size:12px;">Todos Significados desta Casa:</strong><br><br>
