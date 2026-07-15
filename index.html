@@ -447,20 +447,22 @@
         #amantesContainer .linear-col:nth-child(10) { grid-row: 4; grid-column: 1; top: 95%; left: 30%; }
 
         /* --- PAINEL DE JOGO --- */
-        .game-panel { display: none; position: fixed; bottom: 0; right: 0; left: 0; width: 100vw; max-width: 100vw; height: auto; max-height: 30vh; background-color: rgba(0,0,0,0.95); border-top: 1px solid rgba(136,136,136,0.3); border-radius: 0; box-sizing: border-box; padding: 15px 10px; flex-direction: column; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
+               /* --- PAINEL DE JOGO --- */
+        .game-panel { display: none; position: fixed; bottom: 0; right: 0; left: 0; width: 100vw; max-width: 100vw; height: auto; max-height: 30vh; background-color: rgba(0,0,0,0.95); border-top: 1px solid rgba(136,136,136,0.3); border-radius: 0; box-sizing: border-box; padding: 15px 2px; flex-direction: column; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
 
-.game-panel:has(.game-grid.circular-grid) {
-    max-height: 40vh;
-    bottom: 11vh; /* aumenta esse valor pra subir mais */
-}
-
+        .game-panel:has(.game-grid.large-set) {
+            max-height: 50vh;
+            height: 50vh;
+            bottom: 4vh; 
+        }
 
         .game-status { color: var(--gold-main); font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px; text-align: center; text-transform: uppercase; flex-shrink: 0; }
-        .game-grid { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: row; flex-wrap: wrap; overflow-x: hidden; overflow-y: auto; gap: 6px; justify-content: center; padding: 10px 20px; box-sizing: border-box; scroll-behavior: smooth; position: relative; }
+        .game-grid { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: row; flex-wrap: wrap; align-content: center; overflow-x: hidden; overflow-y: auto; gap: 3px; justify-content: center; padding: 10px 2px; box-sizing: border-box; scroll-behavior: smooth; position: relative; }
         .scroll-hint-bar { position: absolute; top: 48px; bottom: 14px; right: 5px; width: 3px; border-radius: 3px; background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 18%, rgba(255,255,255,0.4) 82%, rgba(255,255,255,0) 100%); pointer-events: none; z-index: 2001; }
 
+
         .back-card { width: calc(7.5 * var(--u)); height: calc(13 * var(--u)); background-image: var(--card-back-img); background-color: transparent; background-size: 100% 100%; background-position: center; background-repeat: no-repeat; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s; flex-shrink: 0; border-radius: 6px; box-sizing: border-box; }
-        .game-grid .back-card { width: 32px !important; height: 56px !important; border-radius: 4px; border-width: 1px !important; }
+        .game-grid .back-card { width: 32px; height: 56px; border-radius: 4px; border-width: 1px !important; }
         .game-grid .back-card:hover { transform: translateY(-4px) scale(1.1); }
         .back-card.revealed { pointer-events: none; animation: fadeOutSelection 0.3s ease forwards; }
         @keyframes fadeOutSelection { from { opacity: 1; transform: translateY(-4px) scale(1.1); } to { opacity: 0; transform: translateY(0) scale(0.85); } }
@@ -526,45 +528,20 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
 
 .board.cruz-active #cruzContainer .slot-label { font-size: calc(1 * var(--u)) !important; margin-bottom: calc(0.8 * var(--u)); }
 
-/* ===================== MESA CIRCULAR (MANDALA) DE SELEÇÃO ===================== */
-.game-panel:has(.game-grid.circular-grid) { max-height: 40vh; }
-.game-grid.circular-grid {
-    flex: none;
-    height: 30vh;
-    align-items: center;
+/* ===================== MESA DE SELEÇÃO (GRADE AUTO-AJUSTÁVEL) ===================== */
+/* A grade calcula dinamicamente o tamanho das cartas para que TODAS caibam
+   na área visível do painel, sem necessidade de rolagem - inclusive os 56
+   arcanos menores. Quando o conjunto é grande (arcanos menores), o painel
+   ganha mais altura (.large-set acima) para acomodar melhor as cartas. */
+.fitted-grid-wrapper {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    overflow: visible;
-    padding: 4px 0;
-}
-.circular-wrapper {
-    position: relative;
-    width: 92%;
-    max-width: 520px;
+    align-content: center;
+    align-items: center;
+    width: 100%;
     height: 100%;
-    margin: 0 auto;
 }
-.circular-sun {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 15%;
-    aspect-ratio: 1/1;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.05) 60%, transparent 75%);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    opacity: 0.8;
-    pointer-events: none;
-    filter: drop-shadow(0 0 10px var(--gold-main));
-    z-index: 0;
-    animation: sunPulse 3s ease-in-out infinite;
-}
-@keyframes sunPulse { 0%, 100% { opacity: 0.65; } 50% { opacity: 0.95; } }
-.circular-card {
-    position: absolute;
-    z-index: 1;
-}
-.circular-card:hover { filter: brightness(1.35); z-index: 5; }
 /* ================================================================================ */
 
     </style>
@@ -629,13 +606,6 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
                     <input type="file" id="meaningFileInput" accept=".pdf,.txt,.docx" onchange="loadMeaningFile(this)">
                 </div>
                 <div id="meaningFileStatus" class="meaning-file-status" style="display:none;"></div>
-                <div class="meta-selector-row">
-                    <span class="meta-label">Mesa</span>
-                    <select id="boardStyleSelect" class="meta-select" onchange="applyBoardStyle()">
-                        <option value="grid" selected>Grade Padrão</option>
-                        <option value="circular">Mandala Circular</option>
-                    </select>
-                </div>
             </div>
             <div class="home-action-card">
                 <label for="gameSelect" class="action-label">Nova Leitura</label>
@@ -670,13 +640,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
 </div>
         </div>
 
-.action-btn {
-    -webkit-tap-highlight-color: transparent;
-}
-.action-btn:focus,
-.action-btn:focus-visible {
-    outline: none;
-}
+
 
 
         <div class="central-pair">
@@ -1334,14 +1298,8 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
         }
     }
 
-    /* ===================== NOVO: ESTILO DE MESA DE SELEÇÃO ===================== */
-    let selectionBoardStyle = 'grid'; // 'grid' (padrão) ou 'circular' (mandala)
-
-    function applyBoardStyle() {
-        selectionBoardStyle = document.getElementById('boardStyleSelect').value;
-    }
-
-    // Cria um back-card clicável reutilizável, tanto para a grade quanto para a mandala.
+    /* ===================== MESA DE SELEÇÃO (GRADE ÚNICA, AUTO-AJUSTÁVEL) ===================== */
+    // Cria um back-card clicável reutilizável.
     // phaseCheck() deve retornar true se o clique ainda é válido na fase atual.
     function createBackCardEl(cardData, phaseCheck) {
         const backCard = document.createElement('div');
@@ -1359,67 +1317,62 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
         return backCard;
     }
 
-    // Renderiza o conjunto de cartas viradas para baixo dentro do #gameGrid,
-    // respeitando o estilo de mesa escolhido pelo usuário (grade ou mandala circular).
+    // Renderiza o conjunto de cartas viradas para baixo dentro do #gameGrid.
+    // A grade sempre é do tipo "fileira única de linhas" (sem mesa circular),
+    // com o tamanho das cartas calculado dinamicamente para que TODAS caibam
+    // na área visível sem necessidade de rolagem - incluindo os 56 arcanos menores.
     function renderSelectionCards(pool, phaseCheck) {
         gameGrid.innerHTML = '';
-        gameGrid.classList.remove('circular-grid');
-        if (selectionBoardStyle === 'circular') {
-            gameGrid.classList.add('circular-grid');
-            const wrapper = document.createElement('div');
-            wrapper.className = 'circular-wrapper';
-            const sun = document.createElement('div');
-            sun.className = 'circular-sun';
-            sun.textContent = '☀️';
-            wrapper.appendChild(sun);
-            gameGrid.appendChild(wrapper);
-            requestAnimationFrame(() => layoutCircularCards(wrapper, pool, phaseCheck));
-        } else {
-            pool.forEach(cardData => gameGrid.appendChild(createBackCardEl(cardData, phaseCheck)));
-        }
-    }
-
-    // Distribui as cartas em anéis concêntricos ao redor de um "sol" central,
-    // no estilo da mandala de 22 (maiores) ou 56 (menores) posições.
-    function layoutCircularCards(wrapper, pool, phaseCheck) {
-        const size = Math.min(wrapper.clientWidth, wrapper.clientHeight) || 280;
-        const total = pool.length;
-        let rings;
-        if (total <= 24) {
-            // Um único anel — ideal para os 22 Arcanos Maiores
-            rings = [{ count: total, radiusRatio: 0.40 }];
-        } else {
-            // Dois anéis concêntricos — ideal para os 56 Arcanos Menores
-            const outerCount = Math.ceil(total * 0.55);
-            const innerCount = total - outerCount;
-            rings = [
-    { count: innerCount, radiusRatio: 0.50 },
-    { count: outerCount, radiusRatio: 0.80 }
-];
-}
-
-
-        const cardW = Math.max(size * 0.085, 16);
-        const cardH = cardW * 1.73;
-        let idx = 0;
-        rings.forEach(ring => {
-            const radius = size * ring.radiusRatio;
-            for (let i = 0; i < ring.count && idx < total; i++, idx++) {
-                const angle = (360 / ring.count) * i - 90;
-                const rad = angle * Math.PI / 180;
-                const x = Math.cos(rad) * radius;
-                const y = Math.sin(rad) * radius;
-                const card = createBackCardEl(pool[idx], phaseCheck);
-                card.classList.add('circular-card');
-                card.style.width = cardW + 'px';
-                card.style.height = cardH + 'px';
-                card.style.left = `calc(50% + ${x}px - ${cardW / 2}px)`;
-                card.style.top = `calc(50% + ${y}px - ${cardH / 2}px)`;
-                card.style.transform = `rotate(${angle + 90}deg)`;
-                wrapper.appendChild(card);
-            }
+        // Conjuntos grandes (arcanos menores = 56 cartas) ganham um painel mais alto (ver CSS .large-set)
+        gameGrid.classList.toggle('large-set', pool.length > 24);
+        requestAnimationFrame(() => {
+            layoutFittedGrid(gameGrid, pool, phaseCheck);
+            // Reaplica o encolhimento dos slots do tabuleiro considerando a nova altura do painel
+            resizeBoardToFit();
         });
     }
+
+        // Calcula o número ideal de colunas/tamanho de carta para que TODAS as
+    // cartas do pool caibam dentro do espaço visível do container, sem scroll.
+    function layoutFittedGrid(container, pool, phaseCheck) {
+        container.innerHTML = '';
+
+        const total = pool.length;
+        if (total === 0) return;
+
+        const styles = getComputedStyle(container);
+        const padX = parseFloat(styles.paddingLeft || 0) + parseFloat(styles.paddingRight || 0);
+        const padY = parseFloat(styles.paddingTop || 0) + parseFloat(styles.paddingBottom || 0);
+        const gap = 3;
+        const availW = Math.max(container.clientWidth - padX, 40);
+        const availH = Math.max(container.clientHeight - padY, 40);
+        const aspect = 56 / 32;
+
+        let bestCardW = 0;
+        for (let cols = 1; cols <= total; cols++) {
+            const rows = Math.ceil(total / cols);
+            const cellW = (availW - gap * (cols - 1)) / cols;
+            const cellH = (availH - gap * (rows - 1)) / rows;
+            const cardW = Math.min(cellW, cellH / aspect);
+            if (cardW > bestCardW) bestCardW = cardW;
+        }
+
+        bestCardW = Math.max(16, Math.min(bestCardW, 100));
+        const cardH = bestCardW * aspect;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'fitted-grid-wrapper';
+        wrapper.style.gap = gap + 'px';
+
+        pool.forEach(cardData => {
+            const backCard = createBackCardEl(cardData, phaseCheck);
+            backCard.style.width = bestCardW + 'px';
+            backCard.style.height = cardH + 'px';
+            wrapper.appendChild(backCard);
+        });
+        container.appendChild(wrapper);
+    }
+
     /* ============================================================================ */
 
     function loadMeaningFile(input) {
@@ -2034,7 +1987,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
                 activePhase = 'transition';
                 if (gamePanel.style.display !== 'none') {
                     gameStatus.textContent = "EMBARALHANDO ARCANOS MENORES...";
-                    gameGrid.classList.remove('circular-grid');
+                    gameGrid.classList.remove('large-set');
                     gameGrid.innerHTML = '<div class="shuffling-container"></div>';
                     const sc = gameGrid.querySelector('.shuffling-container');
                     for (let i = 0; i < 12; i++) {
@@ -2102,7 +2055,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
     }
 
     function triggerGlobalRandom() {
-    oposicaoSequence = []; gameGrid.classList.remove('circular-grid'); gameGrid.innerHTML = '';
+    oposicaoSequence = []; gameGrid.classList.remove('large-set'); gameGrid.innerHTML = '';
     activePhase = 'complete'; // Impede que a transição de fase atrase e quebre o próximo jogo
     if (gameMode === 'scrTempo') {
             const beforeDeck    = buildScrTempoDeck('Before');
@@ -2166,7 +2119,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
 
     function initManualMandalaMode() {
         gameMode = 'mandalaManual'; mainBoard.className = 'board mandala-active';
-        resetAllSlots(); gamePanel.style.display = 'flex'; gameGrid.classList.remove('circular-grid'); gameGrid.innerHTML = '';
+        resetAllSlots(); gamePanel.style.display = 'flex'; gameGrid.classList.remove('large-set'); gameGrid.innerHTML = '';
         gameStatus.textContent = "CLIQUE NOS SLOTS DO TABULEIRO OU GERE ALEATÓRIO";
         postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex';
     }
@@ -2249,7 +2202,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
         let step = oposicaoSequence[sequenceIndex];
         if (step.action === 'shuffle') {
             gameStatus.textContent = step.msg;
-            gameGrid.classList.remove('circular-grid');
+            gameGrid.classList.remove('large-set');
             gameGrid.innerHTML = '<div class="shuffling-container"></div>';
             const shuffleCont = gameGrid.querySelector('.shuffling-container');
             for (let i = 0; i < 12; i++) {
@@ -2284,7 +2237,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
         activePhase = 'complete';
         mainBoard.classList.remove('game-active');
         gamePanel.style.display = 'none';
-        gameGrid.classList.remove('circular-grid');
+        gameGrid.classList.remove('large-set');
 
         const themeContainer = document.getElementById('themeContainer');
         if (themeContainer) {
