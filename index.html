@@ -447,22 +447,14 @@
         #amantesContainer .linear-col:nth-child(10) { grid-row: 4; grid-column: 1; top: 95%; left: 30%; }
 
         /* --- PAINEL DE JOGO --- */
-               /* --- PAINEL DE JOGO --- */
-        .game-panel { display: none; position: fixed; bottom: 0; right: 0; left: 0; width: 100vw; max-width: 100vw; height: auto; max-height: 30vh; background-color: rgba(0,0,0,0.95); border-top: 1px solid rgba(136,136,136,0.3); border-radius: 0; box-sizing: border-box; padding: 15px 2px; flex-direction: column; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
-
-        .game-panel:has(.game-grid.large-set) {
-            max-height: 50vh;
-            height: 50vh;
-            bottom: 4vh; 
-        }
-
+        .game-panel { display: none; position: fixed; bottom: 0; right: 0; left: 0; width: 100vw; max-width: 100vw; height: auto; max-height: 50vh; background-color: rgba(0,0,0,0.95); border-top: 1px solid rgba(136,136,136,0.3); border-radius: 0; box-sizing: border-box; padding: 15px 10px; flex-direction: column; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
         .game-status { color: var(--gold-main); font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px; text-align: center; text-transform: uppercase; flex-shrink: 0; }
-        .game-grid { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: row; flex-wrap: wrap; align-content: center; overflow-x: hidden; overflow-y: auto; gap: 3px; justify-content: center; padding: 10px 2px; box-sizing: border-box; scroll-behavior: smooth; position: relative; }
+        .game-grid { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: row; flex-wrap: wrap; overflow-x: hidden; overflow-y: auto; gap: 3px; justify-content: center; padding: 5px 10px; box-sizing: border-box; scroll-behavior: smooth; position: relative; }
         .scroll-hint-bar { position: absolute; top: 48px; bottom: 14px; right: 5px; width: 3px; border-radius: 3px; background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 18%, rgba(255,255,255,0.4) 82%, rgba(255,255,255,0) 100%); pointer-events: none; z-index: 2001; }
 
-
         .back-card { width: calc(7.5 * var(--u)); height: calc(13 * var(--u)); background-image: var(--card-back-img); background-color: transparent; background-size: 100% 100%; background-position: center; background-repeat: no-repeat; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s; flex-shrink: 0; border-radius: 6px; box-sizing: border-box; }
-        .game-grid .back-card { width: 32px; height: 56px; border-radius: 4px; border-width: 1px !important; }
+        .game-grid .back-card { width: 32px !important; height: 56px !important; border-radius: 4px; border-width: 1px !important; }
+        .game-grid .back-card.minor-back-card { width: 25.6px !important; height: 44.8px !important; }
         .game-grid .back-card:hover { transform: translateY(-4px) scale(1.1); }
         .back-card.revealed { pointer-events: none; animation: fadeOutSelection 0.3s ease forwards; }
         @keyframes fadeOutSelection { from { opacity: 1; transform: translateY(-4px) scale(1.1); } to { opacity: 0; transform: translateY(0) scale(0.85); } }
@@ -528,21 +520,10 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
 
 .board.cruz-active #cruzContainer .slot-label { font-size: calc(1 * var(--u)) !important; margin-bottom: calc(0.8 * var(--u)); }
 
-/* ===================== MESA DE SELEÇÃO (GRADE AUTO-AJUSTÁVEL) ===================== */
-/* A grade calcula dinamicamente o tamanho das cartas para que TODAS caibam
-   na área visível do painel, sem necessidade de rolagem - inclusive os 56
-   arcanos menores. Quando o conjunto é grande (arcanos menores), o painel
-   ganha mais altura (.large-set acima) para acomodar melhor as cartas. */
-.fitted-grid-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-}
-/* ================================================================================ */
+
+
+
+
 
     </style>
 </head>
@@ -558,12 +539,17 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
         <div id="postGameControls" class="post-game-controls">
 
 
-<button id="btnToggleMeanings" class="action-btn" onclick="this.blur(); toggleMeanings()">Ocultar Significados</button>
+<button
+id="btnToggleMeanings"
+class="action-btn"
+onclick="toggleMeanings()">0cult
+ar Significados</button>
 
-<button id="btnUpdateMeanings" class="action-btn primary-cta" onclick="this.blur(); updateMeanings()">Atualizar Significados</button>
+<button id="btnUpdateMeanings" class="action-btn primary-cta" onclick="updateMeanings()">Atualizar Significados</button>
 
-<button id="btnPlayAnother" class="action-btn" onclick="this.blur(); playAnotherGame()">Limpar Jogo</button>
-
+<button
+id="btnPlayAnother" class="action-btn"
+onclick="playAnotherGame()">Limpar Jogo</button>
         
         
 
@@ -639,9 +625,6 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
     <a href="https://www.instagram.com/vinitarocchi" target="_blank" class="action-btn" style="text-decoration: none;">Instagram</a>
 </div>
         </div>
-
-
-
 
         <div class="central-pair">
             <div class="card" data-slot-num="0-left" data-pos="inside" onclick="selectCard(this)">0</div>
@@ -1176,7 +1159,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
         const unitsH = currentH / 10;
         const navHeader = document.querySelector('.nav-header');
         const headerH = navHeader ? navHeader.offsetHeight : 65;
-        const availableW = window.innerWidth * 0.94;
+        const availableW = window.innerWidth * 0.98;
         let availableH = window.innerHeight - headerH;
         const postControls = document.getElementById('postGameControls');
         let bottomOffset = 20;
@@ -1188,7 +1171,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
             bottomOffset += 40;
         }
         availableH -= bottomOffset;
-        let finalU = Math.min(availableW / unitsW, availableH / unitsH) * 0.85;
+        let finalU = Math.min(availableW / unitsW, availableH / unitsH) * 0.96;
         if (finalU < 1) finalU = 1;
         if (finalU > 14) finalU = 14;
         root.style.setProperty('--u', finalU + 'px');
@@ -1297,83 +1280,6 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
             externalTaMeanings = null;
         }
     }
-
-    /* ===================== MESA DE SELEÇÃO (GRADE ÚNICA, AUTO-AJUSTÁVEL) ===================== */
-    // Cria um back-card clicável reutilizável.
-    // phaseCheck() deve retornar true se o clique ainda é válido na fase atual.
-    function createBackCardEl(cardData, phaseCheck) {
-        const backCard = document.createElement('div');
-        backCard.className = 'back-card';
-        backCard.onclick = () => {
-            if (backCard.classList.contains('revealed')) return;
-            if (typeof phaseCheck === 'function' && !phaseCheck()) return;
-            while (targetIndex < phaseTargets.length && phaseTargets[targetIndex].getAttribute('data-card-name')) { targetIndex++; }
-            if (targetIndex < phaseTargets.length) {
-                backCard.classList.add('revealed');
-                pickCardForSlot(phaseTargets[targetIndex], cardData, true);
-                targetIndex++;
-            }
-        };
-        return backCard;
-    }
-
-    // Renderiza o conjunto de cartas viradas para baixo dentro do #gameGrid.
-    // A grade sempre é do tipo "fileira única de linhas" (sem mesa circular),
-    // com o tamanho das cartas calculado dinamicamente para que TODAS caibam
-    // na área visível sem necessidade de rolagem - incluindo os 56 arcanos menores.
-    function renderSelectionCards(pool, phaseCheck) {
-        gameGrid.innerHTML = '';
-        // Conjuntos grandes (arcanos menores = 56 cartas) ganham um painel mais alto (ver CSS .large-set)
-        gameGrid.classList.toggle('large-set', pool.length > 24);
-        requestAnimationFrame(() => {
-            layoutFittedGrid(gameGrid, pool, phaseCheck);
-            // Reaplica o encolhimento dos slots do tabuleiro considerando a nova altura do painel
-            resizeBoardToFit();
-        });
-    }
-
-        // Calcula o número ideal de colunas/tamanho de carta para que TODAS as
-    // cartas do pool caibam dentro do espaço visível do container, sem scroll.
-    function layoutFittedGrid(container, pool, phaseCheck) {
-        container.innerHTML = '';
-
-        const total = pool.length;
-        if (total === 0) return;
-
-        const styles = getComputedStyle(container);
-        const padX = parseFloat(styles.paddingLeft || 0) + parseFloat(styles.paddingRight || 0);
-        const padY = parseFloat(styles.paddingTop || 0) + parseFloat(styles.paddingBottom || 0);
-        const gap = 3;
-        const availW = Math.max(container.clientWidth - padX, 40);
-        const availH = Math.max(container.clientHeight - padY, 40);
-        const aspect = 56 / 32;
-
-        let bestCardW = 0;
-        for (let cols = 1; cols <= total; cols++) {
-            const rows = Math.ceil(total / cols);
-            const cellW = (availW - gap * (cols - 1)) / cols;
-            const cellH = (availH - gap * (rows - 1)) / rows;
-            const cardW = Math.min(cellW, cellH / aspect);
-            if (cardW > bestCardW) bestCardW = cardW;
-        }
-
-        bestCardW = Math.max(16, Math.min(bestCardW, 100));
-        const cardH = bestCardW * aspect;
-
-        const wrapper = document.createElement('div');
-        wrapper.className = 'fitted-grid-wrapper';
-        wrapper.style.gap = gap + 'px';
-
-        pool.forEach(cardData => {
-            const backCard = createBackCardEl(cardData, phaseCheck);
-            backCard.style.width = bestCardW + 'px';
-            backCard.style.height = cardH + 'px';
-            wrapper.appendChild(backCard);
-        });
-        container.appendChild(wrapper);
-    }
-
-    /* ============================================================================ */
 
     function loadMeaningFile(input) {
         const file = input.files[0];
@@ -1621,7 +1527,8 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
     "sorte e abundância", "fim de conflitos", "liberdade", "fertilidade e gravidez", "extâse e satisfação", "problemas solucionados"
   ],
   "4 de Copas": [
-    "adiar e rejeitar", "ranço", "fofocar", "invejar", "aborrecer", "desinteressar", "recuar", "irritado", "excesso do MAIOR", "tédio e apatia", "chatisse", "fofoca e ciúmes", "insatisfação irreal", "ambientes viciados densos", "vazio espiritual e desligamento", "mau humor e asco", "NOJO", "energia DENSA" ],
+    "adiar e rejeitar", "ranço", "fofocar", "invejar", "aborrecer", "desinteressar", "recuar", "irritado", "excesso do MAIOR", "tédio e apatia", "chatisse", "fofoca e ciúmes", "insatisfação irreal", "ambientes viciados densos", "vazio espiritual e desligamento", "mau humor e asco", "NOJO", "energia DENSA"
+  ],
   "5 de Copas": [
     "vitimizar", "fracassar", "quebrar", "arrepender", "agonizar", "decepcionar", "lamentar", "culpar", "reclusar", "buscar alternativas",
     "amargura", "projeto fracassa", "arrependimento e remorso", "medo da perda do maior", "amargura e melancolia", "falta de amor próprio", "perdas e desgostos", "mudar o foco", "psoriase e depressão leve"
@@ -1712,7 +1619,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
   ],
   "Rainha de Espadas": [
     "vingar", "desmascarar", "desvendar", "dissimular", "chantagear", "estrategizar", "calcular", "controlar", "criticar",
-    "inteligente austera franca independente", "perita investigadora sagaz perspicaz", "egoísta fria calculista cínica", "ambição sem escrúpulos ética", "dona da razão controladora", "apática insensível raivosa intolerante", "rancor e autocrítica tóxica", "perda de conquista indigna", "foco obsessivo infértil"
+    "intelligent austera franca independente", "perita investigadora sagaz perspicaz", "egoísta fria calculista cínica", "ambição sem escrúpulos ética", "dona da razão controladora", "apática insensível raivosa intolerante", "rancor e autocrítica tóxica", "perda de conquista indigna", "foco obsessivo infértil"
   ],
   "Rei de Espadas": [
     "controlar", "focar", "batalhar", "reconstruir", "proteger", "comandar", "liderar", "calcular", "dominar",
@@ -1987,7 +1894,6 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
                 activePhase = 'transition';
                 if (gamePanel.style.display !== 'none') {
                     gameStatus.textContent = "EMBARALHANDO ARCANOS MENORES...";
-                    gameGrid.classList.remove('large-set');
                     gameGrid.innerHTML = '<div class="shuffling-container"></div>';
                     const sc = gameGrid.querySelector('.shuffling-container');
                     for (let i = 0; i < 12; i++) {
@@ -2055,7 +1961,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
     }
 
     function triggerGlobalRandom() {
-    oposicaoSequence = []; gameGrid.classList.remove('large-set'); gameGrid.innerHTML = '';
+    oposicaoSequence = []; gameGrid.innerHTML = '';
     activePhase = 'complete'; // Impede que a transição de fase atrase e quebre o próximo jogo
     if (gameMode === 'scrTempo') {
             const beforeDeck    = buildScrTempoDeck('Before');
@@ -2119,7 +2025,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
 
     function initManualMandalaMode() {
         gameMode = 'mandalaManual'; mainBoard.className = 'board mandala-active';
-        resetAllSlots(); gamePanel.style.display = 'flex'; gameGrid.classList.remove('large-set'); gameGrid.innerHTML = '';
+        resetAllSlots(); gamePanel.style.display = 'flex'; gameGrid.innerHTML = '';
         gameStatus.textContent = "CLIQUE NOS SLOTS DO TABULEIRO OU GERE ALEATÓRIO";
         postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex';
     }
@@ -2148,15 +2054,15 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
         startSequence([
             { type: 'custom', msg: 'SITUAÇÃO — ESCOLHA O MAIOR (Before Tarot)', pool: shuffle(beforeDeck.majors), targets: [document.querySelector('[data-scr-tempo-slot="top-1"]')] },
             { action: 'shuffle', msg: 'EMBARALHANDO MENORES...' },
-            { type: 'custom', msg: 'SITUAÇÃO — ESCOLHA O MENOR (Before Tarot)', pool: shuffle(beforeDeck.minors), targets: [document.querySelector('[data-scr-tempo-slot="bottom-1"]')] },
+            { type: 'custom', msg: 'SITUAÇÃO — ESCOLHA O MENOR (Before Tarot)', pool: shuffle(beforeDeck.minors), targets: [document.querySelector('[data-scr-tempo-slot="bottom-1"]')], isMinor: true },
             { action: 'shuffle', msg: 'EMBARALHANDO CAMINHO...' },
             { type: 'custom', msg: 'CAMINHO — ESCOLHA O MAIOR (New Vision)', pool: shuffle(newVisionDeck.majors), targets: [document.querySelector('[data-scr-tempo-slot="top-2"]')] },
             { action: 'shuffle', msg: 'EMBARALHANDO MENORES...' },
-            { type: 'custom', msg: 'CAMINHO — ESCOLHA O MENOR (New Vision)', pool: shuffle(newVisionDeck.minors), targets: [document.querySelector('[data-scr-tempo-slot="bottom-2"]')] },
+            { type: 'custom', msg: 'CAMINHO — ESCOLHA O MENOR (New Vision)', pool: shuffle(newVisionDeck.minors), targets: [document.querySelector('[data-scr-tempo-slot="bottom-2"]')], isMinor: true },
             { action: 'shuffle', msg: 'EMBARALHANDO RESULTADO...' },
             { type: 'custom', msg: 'RESULTADO — ESCOLHA O MAIOR (After Tarot)', pool: shuffle(afterDeck.majors), targets: [document.querySelector('[data-scr-tempo-slot="top-3"]')] },
             { action: 'shuffle', msg: 'EMBARALHANDO MENORES...' },
-            { type: 'custom', msg: 'RESULTADO — ESCOLHA O MENOR (After Tarot)', pool: shuffle(afterDeck.minors), targets: [document.querySelector('[data-scr-tempo-slot="bottom-3"]')] }
+            { type: 'custom', msg: 'RESULTADO — ESCOLHA O MENOR (After Tarot)', pool: shuffle(afterDeck.minors), targets: [document.querySelector('[data-scr-tempo-slot="bottom-3"]')], isMinor: true }
         ]);
     }
     function initCsmdGame() { gameMode = 'csmd'; mainBoard.className = 'board csmd-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
@@ -2202,7 +2108,6 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
         let step = oposicaoSequence[sequenceIndex];
         if (step.action === 'shuffle') {
             gameStatus.textContent = step.msg;
-            gameGrid.classList.remove('large-set');
             gameGrid.innerHTML = '<div class="shuffling-container"></div>';
             const shuffleCont = gameGrid.querySelector('.shuffling-container');
             for (let i = 0; i < 12; i++) {
@@ -2217,27 +2122,68 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
         }
         let deckPool = step.type === 'custom' ? step.pool : (step.type === 'majors' ? shuffle([...deck.major]) : shuffle([...deck.pentacles, ...deck.swords, ...deck.cups, ...deck.wands]));
         activePhase = step.type; phaseTargets = step.targets; targetIndex = 0;
-        gameStatus.textContent = step.msg;
-        renderSelectionCards(deckPool, () => true);
+        gameStatus.textContent = step.msg; gameGrid.innerHTML = '';
+        deckPool.forEach((cardData) => {
+            const backCard = document.createElement('div');
+            backCard.className = 'back-card';
+            if (step.type === 'minors' || step.isMinor) {
+                backCard.classList.add('minor-back-card');
+            }
+            backCard.onclick = () => {
+                if (backCard.classList.contains('revealed')) return;
+                while (targetIndex < phaseTargets.length && phaseTargets[targetIndex].getAttribute('data-card-name')) { targetIndex++; }
+                if (targetIndex < phaseTargets.length) {
+                    backCard.classList.add('revealed');
+                    pickCardForSlot(phaseTargets[targetIndex], cardData, true);
+                    targetIndex++;
+                }
+            };
+            gameGrid.appendChild(backCard);
+        });
     }
 
     function setupMajorsGamePhase() {
         activePhase = 'majors'; targetIndex = 0; gameStatus.textContent = "ESCOLHA OS ARCANOS MAIORES";
-        phaseTargets = getGameTargets(gameMode).majors;
-        renderSelectionCards(shuffle([...deck.major]), () => activePhase === 'majors');
+        phaseTargets = getGameTargets(gameMode).majors; gameGrid.innerHTML = '';
+        shuffle([...deck.major]).forEach((cardData) => {
+            const backCard = document.createElement('div');
+            backCard.className = 'back-card';
+            backCard.onclick = () => {
+                if (backCard.classList.contains('revealed') || activePhase !== 'majors') return;
+                while (targetIndex < phaseTargets.length && phaseTargets[targetIndex].getAttribute('data-card-name')) { targetIndex++; }
+                if (targetIndex < phaseTargets.length) {
+                    backCard.classList.add('revealed');
+                    pickCardForSlot(phaseTargets[targetIndex], cardData, true);
+                    targetIndex++;
+                }
+            };
+            gameGrid.appendChild(backCard);
+        });
     }
 
     function setupMinorsGamePhase() {
         activePhase = 'minors'; targetIndex = 0; gameStatus.textContent = "ESCOLHA OS ARCANOS MENORES";
-        phaseTargets = getGameTargets(gameMode).minors;
-        renderSelectionCards(shuffle([...deck.wands, ...deck.cups, ...deck.swords, ...deck.pentacles]), () => activePhase === 'minors');
+        phaseTargets = getGameTargets(gameMode).minors; gameGrid.innerHTML = '';
+        shuffle([...deck.wands, ...deck.cups, ...deck.swords, ...deck.pentacles]).forEach((cardData) => {
+            const backCard = document.createElement('div');
+            backCard.className = 'back-card minor-back-card';
+            backCard.onclick = () => {
+                if (backCard.classList.contains('revealed') || activePhase !== 'minors') return;
+                while (targetIndex < phaseTargets.length && phaseTargets[targetIndex].getAttribute('data-card-name')) { targetIndex++; }
+                if (targetIndex < phaseTargets.length) {
+                    backCard.classList.add('revealed');
+                    pickCardForSlot(phaseTargets[targetIndex], cardData, true);
+                    targetIndex++;
+                }
+            };
+            gameGrid.appendChild(backCard);
+        });
     }
 
     function triggerFinalReveal() {
         activePhase = 'complete';
         mainBoard.classList.remove('game-active');
         gamePanel.style.display = 'none';
-        gameGrid.classList.remove('large-set');
 
         const themeContainer = document.getElementById('themeContainer');
         if (themeContainer) {
