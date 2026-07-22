@@ -225,7 +225,7 @@
 
         /* --- BOTÕES INFERIORES REDUZIDOS 50% --- */
         .post-game-controls {
-            position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: calc(12px - 5vh); left: 50%; transform: translateX(-50%);
             display: none; flex-wrap: wrap; justify-content: center; align-items: center;
             gap: 6px; z-index: 3000; width: 96%; max-width: 600px;
             background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);
@@ -525,7 +525,7 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
 }
 .mandala-house-date {
     font-family: 'Montserrat', sans-serif;
-    font-size: calc(1.2 * var(--u));
+    font-size: calc(2.3 * var(--u));
     color: var(--gold-main);
     opacity: 0.8;
     white-space: nowrap;
@@ -569,21 +569,8 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
 
     <header class="nav-header">
         <h1 class="app-title">Viniastros</h1>
-        <span id="mandalaPeriodLabel" style="display:none; font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:4px; font-family:'Montserrat', sans-serif;"></span>
         <button id="btnVoltar" class="action-btn" style="display: none;" onclick="backToHomeMenu()">HOME</button>
     </header>
-
-    <div id="themeContainer">
-        <label for="themeSelect">Tema:</label>
-        <select id="themeSelect" onchange="updateMeanings()">
-            <option value="">Geral</option>
-            <option value="MENTAL">Mental</option>
-            <option value="SENTIMENTAL">Sentimental</option>
-            <option value="MATERIAL">Material</option>
-            <option value="FUTURO">Futuro</option>
-            <option value="FINANCEIRO">Financeiro</option>
-        </select>
-    </div>
 
         <div id="postGameControls" class="post-game-controls">
 
@@ -607,6 +594,7 @@ onclick="playAnotherGame()">Limpar Jogo</button>
     </div>
 
     <div class="board home-active" id="mainBoard">
+        <div id="mandalaPeriodLabel" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, calc(-50% + -8 * var(--u))); text-align:center; font-size:9px; color:var(--gold-main); text-transform:uppercase; letter-spacing:1px; font-family:'Montserrat', sans-serif; white-space:nowrap; z-index:6;"></div>
         <div id="homeContainer" class="home-container">
             <div class="home-hero">
                 <img src="https://i.ibb.co/JwrVdqvH/A2-B85-AEE-8797-4-C93-9-ED1-32803451-AA17.jpg" alt="Vini Astros Tarot Art" class="home-art-img">
@@ -1288,6 +1276,10 @@ onclick="playAnotherGame()">Limpar Jogo</button>
         requestAnimationFrame(() => {
             mainBoard.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
             mainBoard.style.transform = `translateY(${yOffset}px)`;
+            if (mainBoard.classList.contains('mandala-active') && mandalaStartDay !== null) {
+                clearTimeout(mandalaLabelTimer);
+                mandalaLabelTimer = setTimeout(renderMandalaDateLabels, 550);
+            }
         });
     }
 
@@ -1514,6 +1506,7 @@ onclick="playAnotherGame()">Limpar Jogo</button>
     let mandalaStartMonth = null; // 0-11
     let pendingMandalaMode = null;
     let mandalaProgressCount = 0;
+    let mandalaLabelTimer = null;
 
     const mandalaHouseAngles = {1:270,2:240,3:210,4:180,5:150,6:120,7:90,8:60,9:30,10:0,11:330,12:300};
     const mandalaHouseOffsets = {1:0,12:1,11:2,10:3,9:4,8:5,7:6,6:7,5:8,4:9,3:10,2:11};
@@ -1559,21 +1552,58 @@ onclick="playAnotherGame()">Limpar Jogo</button>
         document.querySelectorAll('.mandala-house-date-wrapper').forEach(el => el.remove());
     }
 
+    const mandalaLabelDirections = { 1: 'right', 4: 'above', 7: 'left', 10: 'below' };
+
     function renderMandalaDateLabels() {
         removeMandalaDateLabels();
         if (mandalaStartDay === null) return;
-        for (let h = 1; h <= 12; h++) {
-            const angle = mandalaHouseAngles[h];
+        if (!mainBoard.classList.contains('mandala-active')) return;
+
+        const mainBoardRect = mainBoard.getBoundingClientRect();
+        const gap = 8; // espaçamento entre a carta e a data, em px
+
+        Object.keys(mandalaLabelDirections).forEach(houseStr => {
+            const house = parseInt(houseStr);
+            const dir = mandalaLabelDirections[house];
+            const cardEl = document.querySelector(`.card[data-slot-num="${house}"][data-pos="inside"]`);
+            if (!cardEl) return;
+            const cardRect = cardEl.getBoundingClientRect();
+            if (cardRect.width === 0 || cardRect.height === 0) return;
+
+            let viewportLeft, viewportTop, translateX, translateY;
+            if (dir === 'right') {
+                viewportLeft = cardRect.right + gap;
+                viewportTop  = cardRect.top + cardRect.height / 2;
+                translateX = '0%'; translateY = '-50%';
+            } else if (dir === 'left') {
+                viewportLeft = cardRect.left - gap;
+                viewportTop  = cardRect.top + cardRect.height / 2;
+                translateX = '-100%'; translateY = '-50%';
+            } else if (dir === 'above') {
+                viewportLeft = cardRect.left + cardRect.width / 2;
+                viewportTop  = cardRect.top - gap;
+                translateX = '-50%'; translateY = '-100%';
+            } else if (dir === 'below') {
+                viewportLeft = cardRect.left + cardRect.width / 2;
+                viewportTop  = cardRect.bottom + gap;
+                translateX = '-50%'; translateY = '0%';
+            }
+
+            const localLeft = viewportLeft - mainBoardRect.left;
+            const localTop  = viewportTop  - mainBoardRect.top;
+
             const wrapper = document.createElement('div');
             wrapper.className = 'mandala-house-date-wrapper';
-            wrapper.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateY(calc(-1 * (var(--pair-radius) + 3 * var(--u))))`;
+            wrapper.style.top = localTop + 'px';
+            wrapper.style.left = localLeft + 'px';
+            wrapper.style.transform = `translate(${translateX}, ${translateY})`;
+
             const inner = document.createElement('div');
             inner.className = 'mandala-house-date';
-            inner.style.transform = `rotate(${-angle}deg)`;
-            inner.textContent = getHouseDateLabel(h);
+            inner.textContent = getHouseDateLabel(house);
             wrapper.appendChild(inner);
             mainBoard.appendChild(wrapper);
-        }
+        });
     }
 
     function updateMandalaPeriodLabel() {
@@ -2303,7 +2333,7 @@ onclick="playAnotherGame()">Limpar Jogo</button>
 
     function initManualMandalaMode() {
         gameMode = 'mandalaManual'; mainBoard.className = 'board mandala-active';
-        resetAllSlots(); renderMandalaDateLabels(); gamePanel.style.display = 'flex'; gameGrid.innerHTML = '';
+        resetAllSlots(); gamePanel.style.display = 'flex'; gameGrid.innerHTML = '';
         gameStatus.textContent = "CLIQUE NOS SLOTS DO TABULEIRO OU GERE ALEATÓRIO";
         postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex';
     }
@@ -2314,11 +2344,7 @@ onclick="playAnotherGame()">Limpar Jogo</button>
         postGameControls.style.display = 'none'; resetAllSlots();
         document.getElementById('gameSelect').value = "";
 
-        const themeContainer = document.getElementById('themeContainer');
-        if (themeContainer) themeContainer.style.display = 'none';
-        const themeSelect = document.getElementById('themeSelect');
-        if (themeSelect) themeSelect.value = "";
-
+        clearTimeout(mandalaLabelTimer);
         removeMandalaDateLabels();
         mandalaStartDay = null; mandalaStartMonth = null; mandalaProgressCount = 0;
         document.getElementById('btnProgressTime').style.display = 'none';
@@ -2327,7 +2353,7 @@ onclick="playAnotherGame()">Limpar Jogo</button>
         mainBoard.style.transform = '';
     }
 
-    function initInteractiveGame() { gameMode = 'mandalaInterativa'; mainBoard.className = 'board mandala-active game-active'; resetAllSlots(); renderMandalaDateLabels(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
+    function initInteractiveGame() { gameMode = 'mandalaInterativa'; mainBoard.className = 'board mandala-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
     function initDuplaGame() { gameMode = 'dupla'; mainBoard.className = 'board dupla-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
 
     function initScrGame() { gameMode = 'scr'; mainBoard.className = 'board scr-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
@@ -2467,11 +2493,6 @@ onclick="playAnotherGame()">Limpar Jogo</button>
         activePhase = 'complete';
         mainBoard.classList.remove('game-active');
         gamePanel.style.display = 'none';
-
-        const themeContainer = document.getElementById('themeContainer');
-        if (themeContainer) {
-            themeContainer.style.display = 'flex';
-        }
 
         document.querySelectorAll('.card[data-reveal-url]').forEach(card => {
             const finalUrl = card.getAttribute('data-reveal-url');
