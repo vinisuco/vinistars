@@ -172,12 +172,7 @@
             border-radius: 3px !important;
         }
 
-        #mainBoard[data-current-deck="RiderWaite"] .card {
-            border-width: 2px 0px 2px 0px !important;
-            border-style: solid !important;
-            border-color: #FFFFFF !important;
-            border-radius: 5px !important;
-        }
+        
 
         #mainBoard[data-current-deck="HoiPoloi"] .card {
             border-width: 3px 2px 3px 2px !important;
@@ -455,6 +450,8 @@
         .back-card { width: calc(7.5 * var(--u)); height: calc(13 * var(--u)); background-image: var(--card-back-img); background-color: transparent; background-size: 100% 100%; background-position: center; background-repeat: no-repeat; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s; flex-shrink: 0; border-radius: 6px; box-sizing: border-box; }
         .game-grid .back-card { width: 32px !important; height: 56px !important; border-radius: 4px; border-width: 1px !important; }
         .game-grid .back-card.minor-back-card { width: 25.6px !important; height: 44.8px !important; }
+
+
         .game-grid .back-card:hover { transform: translateY(-4px) scale(1.1); }
         .back-card.revealed { pointer-events: none; animation: fadeOutSelection 0.3s ease forwards; }
         @keyframes fadeOutSelection { from { opacity: 1; transform: translateY(-4px) scale(1.1); } to { opacity: 0; transform: translateY(0) scale(0.85); } }
@@ -521,8 +518,47 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
 .board.cruz-active #cruzContainer .slot-label { font-size: calc(1 * var(--u)) !important; margin-bottom: calc(0.8 * var(--u)); }
 
 
+/* --- FIX: Datas das Casas da Mandala --- */
+.mandala-house-date-wrapper {
+    position: absolute; top: 50%; left: 50%;
+    pointer-events: none; z-index: 5;
+}
+.mandala-house-date {
+    font-family: 'Montserrat', sans-serif;
+    font-size: calc(1.2 * var(--u));
+    color: var(--gold-main);
+    opacity: 0.8;
+    white-space: nowrap;
+    text-align: center;
+    text-shadow: 0 0 4px rgba(0,0,0,0.6);
+}
 
+/* --- FIX: Seletor de Tema pós-jogo --- */
+#themeContainer {
+    display: none;
+    position: fixed;
+    top: 70px; left: 50%; transform: translateX(-50%);
+    z-index: 1500;
+    align-items: center; gap: 8px;
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    padding: 6px 10px;
+    backdrop-filter: blur(6px);
+}
+#themeContainer label {
+    font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
+    font-family: 'Montserrat', sans-serif; white-space: nowrap;
+}
+#themeSelect {
+    background: transparent; color: var(--text-main); border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.5); font-size: 10px; padding: 2px 0;
+    outline: none; cursor: pointer; font-family: 'Montserrat', sans-serif;
+}
+#themeSelect option { background-color: #111; color: #fff; }
 
+/* --- FIX: Modal de data da Mandala --- */
+#mandalaDateModal .modal-content { max-width: 320px; height: auto; }
 
 
     </style>
@@ -533,8 +569,21 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
 
     <header class="nav-header">
         <h1 class="app-title">Viniastros</h1>
+        <span id="mandalaPeriodLabel" style="display:none; font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:4px; font-family:'Montserrat', sans-serif;"></span>
         <button id="btnVoltar" class="action-btn" style="display: none;" onclick="backToHomeMenu()">HOME</button>
     </header>
+
+    <div id="themeContainer">
+        <label for="themeSelect">Tema:</label>
+        <select id="themeSelect" onchange="updateMeanings()">
+            <option value="">Geral</option>
+            <option value="MENTAL">Mental</option>
+            <option value="SENTIMENTAL">Sentimental</option>
+            <option value="MATERIAL">Material</option>
+            <option value="FUTURO">Futuro</option>
+            <option value="FINANCEIRO">Financeiro</option>
+        </select>
+    </div>
 
         <div id="postGameControls" class="post-game-controls">
 
@@ -542,14 +591,15 @@ body.mystic-theme .bottom-links .action-btn { background: transparent; border: n
 <button
 id="btnToggleMeanings"
 class="action-btn"
-onclick="toggleMeanings()">0cult
-ar Significados</button>
+onclick="toggleMeanings()">Ocultar Significados</button>
 
 <button id="btnUpdateMeanings" class="action-btn primary-cta" onclick="updateMeanings()">Atualizar Significados</button>
 
 <button
 id="btnPlayAnother" class="action-btn"
 onclick="playAnotherGame()">Limpar Jogo</button>
+
+<button id="btnProgressTime" class="action-btn" style="display: none;" onclick="progressMandalaTime()">Progredir Tempo</button>
         
         
 
@@ -1106,6 +1156,39 @@ onclick="playAnotherGame()">Limpar Jogo</button>
         </div>
     </div>
 
+    <div id="mandalaDateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Data de Início</h2>
+                <button class="close-btn" onclick="document.getElementById('mandalaDateModal').style.display='none';">&times;</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:15px; padding:10px 0;">
+                <div class="meta-selector-row">
+                    <span class="meta-label">Dia</span>
+                    <select id="mandalaDaySelect" class="meta-select"></select>
+                </div>
+                <div class="meta-selector-row">
+                    <span class="meta-label">Mês</span>
+                    <select id="mandalaMonthSelect" class="meta-select">
+                        <option value="0">Janeiro</option>
+                        <option value="1">Fevereiro</option>
+                        <option value="2">Março</option>
+                        <option value="3">Abril</option>
+                        <option value="4">Maio</option>
+                        <option value="5">Junho</option>
+                        <option value="6">Julho</option>
+                        <option value="7">Agosto</option>
+                        <option value="8">Setembro</option>
+                        <option value="9">Outubro</option>
+                        <option value="10">Novembro</option>
+                        <option value="11">Dezembro</option>
+                    </select>
+                </div>
+                <button class="action-btn primary-cta" onclick="confirmMandalaDate()">Confirmar e Iniciar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
     let currentThemeIndex = 2; // 0: Noturno, 1: Claro, 2: Místico, 3: Pastel
 
@@ -1130,17 +1213,24 @@ onclick="playAnotherGame()">Limpar Jogo</button>
         }
     }
 
-    function resizeBoardToFit() {
+        function resizeBoardToFit() {
         if (mainBoard.classList.contains('home-active')) return;
         const root = document.documentElement;
+
+        // CORREÇÃO: Desativa temporariamente todas as animações para que a medição matemática não seja corrompida pela transição.
+        const styleEl = document.createElement('style');
+        styleEl.innerHTML = '* { transition: none !important; }';
+        document.head.appendChild(styleEl);
+
         mainBoard.style.transition = 'none';
         root.style.setProperty('--u', '10px');
         mainBoard.style.transform = 'translateY(0) scale(1)';
-        void mainBoard.offsetHeight;
+        void mainBoard.offsetHeight; // Força o navegador a recalcular o layout instantaneamente
 
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         let hasVisible = false;
         const elements = document.querySelectorAll('.board:not(.home-active) .card:not([style*="display: none"]), .board:not(.home-active) .slot-label:not([style*="display: none"])');
+        
         elements.forEach(el => {
             if (el.offsetWidth > 0 && el.offsetHeight > 0) {
                 hasVisible = true;
@@ -1151,7 +1241,12 @@ onclick="playAnotherGame()">Limpar Jogo</button>
                 if (rect.bottom > maxY) maxY = rect.bottom;
             }
         });
-        if (!hasVisible) { mainBoard.style.transition = ''; return; }
+        
+        if (!hasVisible) { 
+            document.head.removeChild(styleEl);
+            mainBoard.style.transition = ''; 
+            return; 
+        }
 
         const currentW = maxX - minX;
         const currentH = maxY - minY;
@@ -1159,10 +1254,13 @@ onclick="playAnotherGame()">Limpar Jogo</button>
         const unitsH = currentH / 10;
         const navHeader = document.querySelector('.nav-header');
         const headerH = navHeader ? navHeader.offsetHeight : 65;
-        const availableW = window.innerWidth * 0.98;
+        
+        // CORREÇÃO: Aumentada a margem de segurança lateral de 0.98 para 0.92 para garantir que nunca encoste nas bordas do iPhone
+        const availableW = window.innerWidth * 0.92; 
         let availableH = window.innerHeight - headerH;
         const postControls = document.getElementById('postGameControls');
         let bottomOffset = 20;
+        
         if (mainBoard.classList.contains('game-active') && gamePanel.style.display !== 'none') {
             bottomOffset += gamePanel.offsetHeight || (window.innerHeight * 0.3);
         } else if (postControls.style.display !== 'none') {
@@ -1171,18 +1269,28 @@ onclick="playAnotherGame()">Limpar Jogo</button>
             bottomOffset += 40;
         }
         availableH -= bottomOffset;
-        let finalU = Math.min(availableW / unitsW, availableH / unitsH) * 0.96;
+        
+        // CORREÇÃO: Fator de segurança na altura ajustado para 0.95. Limite máximo diminuído de 14 para 12.
+        let finalU = Math.min(availableW / unitsW, availableH / unitsH) * 0.95;
         if (finalU < 1) finalU = 1;
-        if (finalU > 14) finalU = 14;
+        if (finalU > 12) finalU = 12; 
+        
         root.style.setProperty('--u', finalU + 'px');
         const centerOfAvailableArea = headerH + (availableH / 2);
         const screenCenter = window.innerHeight / 2;
         const yOffset = centerOfAvailableArea - screenCenter;
+        
+        void mainBoard.offsetHeight; // Confirma os novos tamanhos antes de devolver as animações
+
+        // Devolve as animações normais ao jogo
+        document.head.removeChild(styleEl);
+        
         requestAnimationFrame(() => {
             mainBoard.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
             mainBoard.style.transform = `translateY(${yOffset}px)`;
         });
     }
+
     window.addEventListener('resize', resizeBoardToFit);
 
     const deckBaseUrls = {
@@ -1210,6 +1318,12 @@ onclick="playAnotherGame()">Limpar Jogo</button>
     const moonBabyCups = ["https://i.ibb.co/XrbdxLby/IMG-4213.png","https://i.ibb.co/8nfvdW4d/IMG-4214.png","https://i.ibb.co/gZvyvhR0/IMG-4215.png","https://i.ibb.co/tTc9n051/IMG-4216.png","https://i.ibb.co/8gDR9Nn3/IMG-4217.png","https://i.ibb.co/HTFKjbkz/IMG-4218.png","https://i.ibb.co/LhYzXnZ8/IMG-4219.png","https://i.ibb.co/V0cXD3pb/IMG-4220.png","https://i.ibb.co/bRYXSHVr/IMG-4221.png","https://i.ibb.co/67y43mXX/IMG-4222.png","https://i.ibb.co/B26kRXx7/IMG-4223.png","https://i.ibb.co/ymLmZk8G/IMG-4224.png","https://i.ibb.co/zTY1Gxw4/IMG-4225.png","https://i.ibb.co/XrBp969v/IMG-4226.png"];
     const moonBabyWands = ["https://i.ibb.co/Q391pz1r/IMG-4265.png","https://i.ibb.co/vxWrwTyG/IMG-4266.png","https://i.ibb.co/pB9v9JyZ/IMG-4267.png","https://i.ibb.co/HL2ZCVLt/IMG-4268.png","https://i.ibb.co/pBGbGqPy/IMG-4269.png","https://i.ibb.co/Kc9FCP5B/IMG-4270.png","https://i.ibb.co/bMMhFKWL/IMG-4271.png","https://i.ibb.co/ymxY1Rqt/IMG-4272.png","https://i.ibb.co/67H882rf/IMG-4273.png","https://i.ibb.co/chsLqQjD/IMG-4274.png","https://i.ibb.co/k6S4F57t/IMG-4275.png","https://i.ibb.co/N2v9cnnZ/IMG-4276.png","https://i.ibb.co/1fQfrLYt/IMG-4277.png","https://i.ibb.co/Pvx6pTjM/IMG-4278.png"];
 
+    const riderWaiteMajors = ["https://i.ibb.co/tPYwdb96/IMG-5792.png","https://i.ibb.co/JW6w4F6x/IMG-5793.png","https://i.ibb.co/dsBDrb5B/IMG-5794.png","https://i.ibb.co/rGB2N8Y0/IMG-5795.png","https://i.ibb.co/HfY17FcD/IMG-5796.png","https://i.ibb.co/YTBhJ2mw/IMG-5797.png","https://i.ibb.co/gb1qMVdy/IMG-5798.png","https://i.ibb.co/LDNhb1dN/IMG-5799.png","https://i.ibb.co/CpVG8K7P/IMG-5800.png","https://i.ibb.co/4nS1ySrc/IMG-5801.png","https://i.ibb.co/2r1jDTR/IMG-5802.png","https://i.ibb.co/xqvvnYH0/IMG-5803.png","https://i.ibb.co/4Z4ZsrnL/IMG-5804.png","https://i.ibb.co/XktBgc0T/IMG-5805.png","https://i.ibb.co/yFBPt2hm/IMG-5806.png","https://i.ibb.co/NgzVvvG6/IMG-5807.png","https://i.ibb.co/7tDBMH76/IMG-5808.png","https://i.ibb.co/DXX9hVp/IMG-5809.png","https://i.ibb.co/wrMDgvWT/IMG-5810.png","https://i.ibb.co/8yBz3PR/IMG-5811.png","https://i.ibb.co/pj7Z6KrX/IMG-5812.png","https://i.ibb.co/wFG4jQmV/IMG-5813.png"];
+    const riderWaitePentacles = ["https://i.ibb.co/7dnt9tng/IMG-5819.png","https://i.ibb.co/zVHg5028/IMG-5820.png","https://i.ibb.co/VYWLTZPC/IMG-5821.png","https://i.ibb.co/YM9ntsJ/IMG-5822.png","https://i.ibb.co/zTKKsTHt/IMG-5823.png","https://i.ibb.co/Q3Q6Pn35/IMG-5824.png","https://i.ibb.co/6746vj8h/IMG-5825.png","https://i.ibb.co/Q3HMMmT3/IMG-5826.png","https://i.ibb.co/b52pvxYJ/IMG-5827.png","https://i.ibb.co/LzHjt1JS/IMG-5828.png","https://i.ibb.co/mChvtr6S/IMG-5829.png","https://i.ibb.co/ccH2whGJ/IMG-5830.png","https://i.ibb.co/3y3GtdXQ/IMG-5831.png","https://i.ibb.co/XfZWhjc5/IMG-5832.png"];
+    const riderWaiteSwords = ["https://i.ibb.co/hJkRq9w3/IMG-5833.png","https://i.ibb.co/8DdMjmch/IMG-5834.png","https://i.ibb.co/qFpHHT4v/IMG-5835.png","https://i.ibb.co/R40L1B2F/IMG-5836.png","https://i.ibb.co/14yfhF1/IMG-5837.png","https://i.ibb.co/W4rfTCdw/IMG-5838.png","https://i.ibb.co/h17PzW1D/IMG-5839.png","https://i.ibb.co/gbh9h4fq/IMG-5840.png","https://i.ibb.co/vC83TFmv/IMG-5841.png","https://i.ibb.co/MbDfN1j/IMG-5842.png","https://i.ibb.co/ccn2X8tx/IMG-5843.png","https://i.ibb.co/vgmQw4g/IMG-5844.png","https://i.ibb.co/39NrjHHz/IMG-5845.png","https://i.ibb.co/BVmkGVcn/IMG-5846.png"];
+    const riderWaiteCups = ["https://i.ibb.co/60b1NVfg/IMG-5849.png","https://i.ibb.co/Gv6xtTH5/IMG-5850.png","https://i.ibb.co/CK6cKq3n/IMG-5851.png","https://i.ibb.co/9PMMZpN/IMG-5852.png","https://i.ibb.co/7x5xjZP8/IMG-5853.png","https://i.ibb.co/nGPTQk4/IMG-5854.png","https://i.ibb.co/qM5rJXPp/IMG-5855.png","https://i.ibb.co/6R0MWvww/IMG-5856.png","https://i.ibb.co/LDwJC7k6/IMG-5857.png","https://i.ibb.co/7NdF9PMX/IMG-5858.png","https://i.ibb.co/kgynLtvN/IMG-5859.png","https://i.ibb.co/LdbDBPqv/IMG-5860.png","https://i.ibb.co/F4gX6Ltx/IMG-5861.png","https://i.ibb.co/wr4y0Jgy/IMG-5862.png"];
+    const riderWaiteWands = ["https://i.ibb.co/6cT4fNvv/IMG-5863.png","https://i.ibb.co/V09B1CsQ/IMG-5864.png","https://i.ibb.co/MxZDbsfr/IMG-5865.png","https://i.ibb.co/1fGHTqT2/IMG-5866.png","https://i.ibb.co/6RsD29pB/IMG-5867.png","https://i.ibb.co/dsxmvnvJ/IMG-5868.png","https://i.ibb.co/WW71LKWZ/IMG-5869.png","https://i.ibb.co/vW6M6pc/IMG-5870.png","https://i.ibb.co/35Dy7Nqj/IMG-5871.png","https://i.ibb.co/wZsm819N/IMG-5872.png","https://i.ibb.co/xZxYdJ4/IMG-5873.png","https://i.ibb.co/F4wypgNY/IMG-5874.png","https://i.ibb.co/TxZXvT90/IMG-5875.png","https://i.ibb.co/rG3Hss4j/IMG-5876.png"];
+
     function applyDeckSelection() {
         const sel = document.getElementById('deckSelect');
         currentDeckKey = sel.value;
@@ -1219,6 +1333,7 @@ onclick="playAnotherGame()">Limpar Jogo</button>
 
     function buildMajorsForDeck(deckKey) {
         if (deckKey === 'MoonBaby') return majorNames.map((name, i) => ({ name, url: moonBabyMajors[i] }));
+        if (deckKey === 'RiderWaite') return majorNames.map((name, i) => ({ name, url: riderWaiteMajors[i] }));
         const b = deckBaseUrls[deckKey];
         if (deckKey === 'Alchemical') return majorNames.map((name, i) => ({ name, url: `${b}${String(i).padStart(2, '0')}.jpg` }));
         if (decksWithSpecialMajorNaming.includes(deckKey)) return majorNames.map((name, i) => ({ name, url: `${b}${specialMajorFileNames[i]}.jpg` }));
@@ -1232,6 +1347,19 @@ onclick="playAnotherGame()">Limpar Jogo</button>
             if(suitLabel === 'Espadas') urls = moonBabySwords;
             if(suitLabel === 'Copas') urls = moonBabyCups;
             if(suitLabel === 'Paus') urls = moonBabyWands;
+            let cards = [];
+            for(let i=0; i<10; i++) cards.push({ name: (i === 0) ? `Ás de ${suitLabel}` : `${i+1} de ${suitLabel}`, url: urls[i] });
+            let courtNames = ['Pajem', 'Cavaleiro', 'Rainha', 'Rei'];
+            courtNames.forEach((court, i) => cards.push({ name: `${court} de ${suitLabel}`, url: urls[10 + i] }));
+            return cards;
+        }
+
+        if (deckKey === 'RiderWaite') {
+            let urls = [];
+            if(suitLabel === 'Ouros') urls = riderWaitePentacles;
+            if(suitLabel === 'Espadas') urls = riderWaiteSwords;
+            if(suitLabel === 'Copas') urls = riderWaiteCups;
+            if(suitLabel === 'Paus') urls = riderWaiteWands;
             let cards = [];
             for(let i=0; i<10; i++) cards.push({ name: (i === 0) ? `Ás de ${suitLabel}` : `${i+1} de ${suitLabel}`, url: urls[i] });
             let courtNames = ['Pajem', 'Cavaleiro', 'Rainha', 'Rei'];
@@ -1382,6 +1510,14 @@ onclick="playAnotherGame()">Limpar Jogo</button>
     let currentSelectedCard = null;
     let gameMode = 'mandalaInterativa';
 
+    let mandalaStartDay = null;
+    let mandalaStartMonth = null; // 0-11
+    let pendingMandalaMode = null;
+    let mandalaProgressCount = 0;
+
+    const mandalaHouseAngles = {1:270,2:240,3:210,4:180,5:150,6:120,7:90,8:60,9:30,10:0,11:330,12:300};
+    const mandalaHouseOffsets = {1:0,12:1,11:2,10:3,9:4,8:5,7:6,6:7,5:8,4:9,3:10,2:11};
+
     const modal             = document.getElementById('tarotModal');
     const encyclopediaModal = document.getElementById('encyclopediaModal');
     const detailModal       = document.getElementById('detailModal');
@@ -1394,6 +1530,127 @@ onclick="playAnotherGame()">Limpar Jogo</button>
     const gameStatus        = document.getElementById('gameStatus');
     const btnVoltar         = document.getElementById('btnVoltar');
     const postGameControls  = document.getElementById('postGameControls');
+
+    (function populateMandalaDaySelect(){
+        const sel = document.getElementById('mandalaDaySelect');
+        if (!sel) return;
+        for (let d = 1; d <= 31; d++) {
+            const opt = document.createElement('option');
+            opt.value = d; opt.textContent = d;
+            sel.appendChild(opt);
+        }
+    })();
+
+    function addMonthsClamped(day, month, monthsToAdd) {
+        const daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
+        const newMonth = ((month + monthsToAdd) % 12 + 12) % 12;
+        const newDay = Math.min(day, daysInMonth[newMonth]);
+        return { day: newDay, month: newMonth };
+    }
+
+    function getHouseDateLabel(houseNumber) {
+        if (mandalaStartDay === null || mandalaStartMonth === null) return '';
+        const offset = mandalaHouseOffsets[houseNumber];
+        const r = addMonthsClamped(mandalaStartDay, mandalaStartMonth, offset);
+        return `${String(r.day).padStart(2,'0')}/${String(r.month+1).padStart(2,'0')}`;
+    }
+
+    function removeMandalaDateLabels() {
+        document.querySelectorAll('.mandala-house-date-wrapper').forEach(el => el.remove());
+    }
+
+    function renderMandalaDateLabels() {
+        removeMandalaDateLabels();
+        if (mandalaStartDay === null) return;
+        for (let h = 1; h <= 12; h++) {
+            const angle = mandalaHouseAngles[h];
+            const wrapper = document.createElement('div');
+            wrapper.className = 'mandala-house-date-wrapper';
+            wrapper.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateY(calc(-1 * (var(--pair-radius) + 3 * var(--u))))`;
+            const inner = document.createElement('div');
+            inner.className = 'mandala-house-date';
+            inner.style.transform = `rotate(${-angle}deg)`;
+            inner.textContent = getHouseDateLabel(h);
+            wrapper.appendChild(inner);
+            mainBoard.appendChild(wrapper);
+        }
+    }
+
+    function updateMandalaPeriodLabel() {
+        const label = document.getElementById('mandalaPeriodLabel');
+        if (!label) return;
+        const starts = [0,3,6,9], ends = [3,6,9,12];
+        const idx = mandalaProgressCount % 4;
+        label.textContent = `Período: ${starts[idx]} a ${ends[idx]} meses`;
+    }
+
+    function progressMandalaTime() {
+        if (gameMode !== 'mandalaInterativa' && gameMode !== 'mandalaManual') return;
+        const cards = document.querySelectorAll('.card[data-slot-num]:not([data-slot-num="0-left"]):not([data-slot-num="0-right"])');
+        cards.forEach(c => { c.style.transition = 'opacity 0.3s ease'; c.style.opacity = '0'; });
+        setTimeout(() => {
+            applyMandalaRotation();
+            cards.forEach(c => { c.style.opacity = '1'; });
+        }, 320);
+    }
+
+    function applyMandalaRotation() {
+        const houseData = {};
+        for (let h = 1; h <= 12; h++) {
+            houseData[h] = {};
+            ['inside','outside'].forEach(pos => {
+                const slot = document.querySelector(`.card[data-slot-num="${h}"][data-pos="${pos}"]`);
+                if (!slot) return;
+                houseData[h][pos] = {
+                    name: slot.getAttribute('data-card-name'),
+                    bg: slot.style.backgroundImage,
+                    hasContent: !!slot.getAttribute('data-card-name')
+                };
+            });
+        }
+
+        function wrapHouse(n) {
+            let w = n - 3;
+            while (w < 1) w += 12;
+            while (w > 12) w -= 12;
+            return w;
+        }
+
+        for (let h = 1; h <= 12; h++) {
+            ['inside','outside'].forEach(pos => {
+                const slot = document.querySelector(`.card[data-slot-num="${h}"][data-pos="${pos}"]`);
+                if (!slot) return;
+                slot.style.backgroundImage = '';
+                slot.classList.remove('board-face-down', 'empty-slot-clickable');
+                slot.removeAttribute('data-card-name');
+                slot.removeAttribute('data-reveal-url');
+                slot.removeAttribute('data-meaning-index');
+                slot.removeAttribute('data-used-indices');
+                slot.innerHTML = '';
+                slot.style.border = '';
+                slot.textContent = h;
+            });
+        }
+
+        for (let h = 1; h <= 12; h++) {
+            const newHouse = wrapHouse(h);
+            ['inside','outside'].forEach(pos => {
+                const data = houseData[h][pos];
+                if (!data || !data.hasContent) return;
+                const target = document.querySelector(`.card[data-slot-num="${newHouse}"][data-pos="${pos}"]`);
+                if (!target) return;
+                target.style.backgroundImage = data.bg;
+                target.setAttribute('data-card-name', data.name);
+                target.innerHTML = '';
+                target.style.border = 'none';
+                injectInnerTag(target, data.name);
+            });
+        }
+
+        enableEmptySlotClicks();
+        mandalaProgressCount++;
+        updateMandalaPeriodLabel();
+    }
 
     const majorNames = [
         "0 - O Louco","1 - O Mago","2 - A Sacerdotisa","3 - A Imperatriz",
@@ -1527,8 +1784,7 @@ onclick="playAnotherGame()">Limpar Jogo</button>
     "sorte e abundância", "fim de conflitos", "liberdade", "fertilidade e gravidez", "extâse e satisfação", "problemas solucionados"
   ],
   "4 de Copas": [
-    "adiar e rejeitar", "ranço", "fofocar", "invejar", "aborrecer", "desinteressar", "recuar", "irritado", "excesso do MAIOR", "tédio e apatia", "chatisse", "fofoca e ciúmes", "insatisfação irreal", "ambientes viciados densos", "vazio espiritual e desligamento", "mau humor e asco", "NOJO", "energia DENSA"
-  ],
+    "adiar e rejeitar", "ranço", "fofocar", "invejar", "aborrecer", "desinteressar", "recuar", "irritado", "excesso do MAIOR", "tédio e apatia", "chatisse", "fofoca e ciúmes", "insatisfação irreal", "ambientes viciados densos", "vazio espiritual e desligamento", "mau humor e asco", "NOJO", "energia DENSA" ],
   "5 de Copas": [
     "vitimizar", "fracassar", "quebrar", "arrepender", "agonizar", "decepcionar", "lamentar", "culpar", "reclusar", "buscar alternativas",
     "amargura", "projeto fracassa", "arrependimento e remorso", "medo da perda do maior", "amargura e melancolia", "falta de amor próprio", "perdas e desgostos", "mudar o foco", "psoriase e depressão leve"
@@ -1998,13 +2254,35 @@ onclick="playAnotherGame()">Limpar Jogo</button>
         const select = document.getElementById('gameSelect');
         const selectedMode = select.value;
         if (!selectedMode) { alert("Por favor, selecione um jogo na lista antes de continuar."); return; }
-        
+
+        if (selectedMode === 'mandalaInterativa' || selectedMode === 'mandalaManual') {
+            pendingMandalaMode = selectedMode;
+            document.getElementById('mandalaDateModal').style.display = 'flex';
+            return;
+        }
+        launchGame(selectedMode);
+    }
+
+    function confirmMandalaDate() {
+        mandalaStartDay = parseInt(document.getElementById('mandalaDaySelect').value);
+        mandalaStartMonth = parseInt(document.getElementById('mandalaMonthSelect').value);
+        mandalaProgressCount = 0;
+        document.getElementById('mandalaDateModal').style.display = 'none';
+        const mode = pendingMandalaMode;
+        pendingMandalaMode = null;
+        launchGame(mode);
+    }
+
+    function launchGame(selectedMode) {
         postGameControls.style.display = 'none';
+        document.getElementById('btnProgressTime').style.display = 'none';
+        document.getElementById('mandalaPeriodLabel').style.display = 'none';
+        removeMandalaDateLabels();
         oposicaoSequence = [];
         activePhase = 'majors';
         sequenceIndex = 0;
         targetIndex = 0;
-        
+
         switch(selectedMode) {
             case 'dupla':             initDuplaGame(); break;
             case 'oposicao':          initOposicaoGame(); break;
@@ -2025,7 +2303,7 @@ onclick="playAnotherGame()">Limpar Jogo</button>
 
     function initManualMandalaMode() {
         gameMode = 'mandalaManual'; mainBoard.className = 'board mandala-active';
-        resetAllSlots(); gamePanel.style.display = 'flex'; gameGrid.innerHTML = '';
+        resetAllSlots(); renderMandalaDateLabels(); gamePanel.style.display = 'flex'; gameGrid.innerHTML = '';
         gameStatus.textContent = "CLIQUE NOS SLOTS DO TABULEIRO OU GERE ALEATÓRIO";
         postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex';
     }
@@ -2035,16 +2313,21 @@ onclick="playAnotherGame()">Limpar Jogo</button>
         gamePanel.style.display = 'none'; btnVoltar.style.display = 'none';
         postGameControls.style.display = 'none'; resetAllSlots();
         document.getElementById('gameSelect').value = "";
-        
+
         const themeContainer = document.getElementById('themeContainer');
         if (themeContainer) themeContainer.style.display = 'none';
         const themeSelect = document.getElementById('themeSelect');
         if (themeSelect) themeSelect.value = "";
 
+        removeMandalaDateLabels();
+        mandalaStartDay = null; mandalaStartMonth = null; mandalaProgressCount = 0;
+        document.getElementById('btnProgressTime').style.display = 'none';
+        document.getElementById('mandalaPeriodLabel').style.display = 'none';
+
         mainBoard.style.transform = '';
     }
 
-    function initInteractiveGame() { gameMode = 'mandalaInterativa'; mainBoard.className = 'board mandala-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
+    function initInteractiveGame() { gameMode = 'mandalaInterativa'; mainBoard.className = 'board mandala-active game-active'; resetAllSlots(); renderMandalaDateLabels(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
     function initDuplaGame() { gameMode = 'dupla'; mainBoard.className = 'board dupla-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
 
     function initScrGame() { gameMode = 'scr'; mainBoard.className = 'board scr-active game-active'; resetAllSlots(); gamePanel.style.display = 'flex'; postGameControls.style.display = 'none'; btnVoltar.style.display = 'inline-flex'; setupMajorsGamePhase(); }
@@ -2200,6 +2483,13 @@ onclick="playAnotherGame()">Limpar Jogo</button>
             injectInnerTag(card, cardName);
         });
         postGameControls.style.display = 'flex';
+
+        if (gameMode === 'mandalaInterativa' || gameMode === 'mandalaManual') {
+            document.getElementById('btnProgressTime').style.display = 'inline-flex';
+            document.getElementById('mandalaPeriodLabel').style.display = 'block';
+            updateMandalaPeriodLabel();
+        }
+
         setTimeout(resizeBoardToFit, 50);
     }
 
@@ -2426,6 +2716,7 @@ onclick="playAnotherGame()">Limpar Jogo</button>
         if (e.target === modal)             closeModal();
         if (e.target === encyclopediaModal) closeEncyclopedia();
         if (e.target === detailModal)       closeDetailModal();
+        if (e.target === document.getElementById('mandalaDateModal')) document.getElementById('mandalaDateModal').style.display = 'none';
     };
     </script>
 </body>
